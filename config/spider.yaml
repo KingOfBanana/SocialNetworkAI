@@ -13,8 +13,8 @@ max_retries: 5                 # retry times for crawling
 
 # you should set the args below if you login from uncommon place
 # It's for verification code indentified
-yundama_username: yourname           # account for yundama
-yundama_passwd: yourpasswd             # password for yundama
+yundama_username: kingofbanana           # account for yundama
+yundama_passwd: 172826             # password for yundama
 
 # the value of mode can be normal or quick.
 # In noraml mode, it will be more stable, while in quick mode, the crawling speed will
@@ -29,17 +29,17 @@ cookie_expire_time: 23
 
 
 db:
-    host: xxx
+    host: localhost
     port: 3306
-    user: weibospider
-    password: xxx
+    user: 2016_lecture
+    password: 172826
     db_name: weibo
     db_type: mysql
 
 redis:
-    host: xxx
+    host: localhost
     port: 6379
-    password: weibospider
+    password: 172826
     cookies: 1                   # store and fetch cookies
     urls: 2                      # store fetched urls and results
     broker: 5                    # broker for celery
