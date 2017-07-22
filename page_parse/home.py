@@ -7,7 +7,7 @@ from page_get import status
 # from db.models import WeiboData
 from db.models import WeiboData, WeiboPic
 from decorators.decorator import parse_decorator
-
+from tools.hashtools import md5Encode
 
 @parse_decorator(1)
 def get_weibo_infos_right(html):
@@ -65,12 +65,10 @@ def get_weibo_info_detail(each, html):
 
     # test for weibo_pic capture
     # 先判断这条微博是否有带图片，再进行后续的处理
-    # weibo_pic = WeiboPic()
     try:
-        # weibo_pic.pic_url = each.find(attrs={'action-type': 'fl_pics'}).find('img').get('src')
         weibo_pic = []
         have_pic = 1
-        pic_list = soup.find_all(attrs={'action-type': 'fl_pics'})
+        pic_list = each.find_all(attrs={'action-type': 'fl_pics'})
     except Exception as e:
         have_pic = 0
 
@@ -80,7 +78,8 @@ def get_weibo_info_detail(each, html):
             wb_pic.uid = wb_data.uid
             wb_pic.weibo_id = wb_data.weibo_id
             wb_pic.pic_url = pic.find('img').get('src')
-            weibo_pic.append(wb_pic)  
+            wb_pic.url_hash = md5Encode(wb_pic.pic_url)
+            weibo_pic.append(wb_pic)
     # end
 
     if '展开全文' in str(each):
@@ -106,7 +105,7 @@ def get_weibo_info_detail(each, html):
         wb_data.praise_num = int(each.find(attrs={'action-type': 'fl_like'}).find_all('em')[1].text)
     except Exception:
         wb_data.praise_num = 0
-    # return wb_data, is_all_cont
+    
     return wb_data, is_all_cont, weibo_pic
 
 
@@ -133,9 +132,7 @@ def get_weibo_list(html):
             if r[2]:
                 weibo_pics.extend(r[2])
             # end
-
             weibo_datas.append(wb_data)
-    # return weibo_datas
     return weibo_datas, weibo_pics
 
 

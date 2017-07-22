@@ -11,7 +11,6 @@ from page_parse.home import get_wbdata_fromweb, get_home_wbdata_byajax, get_tota
 # new import for wb_pic
 from db.wb_pic import insert_weibo_pics
 
-
 # 只抓取原创微博
 home_url = 'http://weibo.com/u/{}?is_ori=1&is_tag=0&profile_ftype=1&page={}'
 ajax_url = 'http://weibo.com/p/aj/v6/mblog/mbloglist?ajwvr=6&domain={}&pagebar={}&is_ori=1&id={}{}&page={}' \
@@ -26,11 +25,15 @@ def crawl_ajax_page(url):
     :return: 
     """
     ajax_html = get_page(url, user_verify=False)
-    ajax_wbdatas = get_home_wbdata_byajax(ajax_html)
+    ajax_wbdatas, ajax_wbpics = get_home_wbdata_byajax(ajax_html)
     if not ajax_wbdatas:
         return ''
 
     insert_weibo_datas(ajax_wbdatas)
+
+    if ajax_wbpics:
+        insert_weibo_pics(ajax_wbpics)
+    
     return ajax_html
 
 
@@ -71,7 +74,8 @@ def crawl_weibo_datas(uid):
 
         app.send_task('tasks.home.crawl_ajax_page', args=(ajax_url_1,), queue='ajax_home_crawler',
                       routing_key='ajax_home_info')
-
+        # crawl_ajax_page(ajax_url_0)
+        # crawl_ajax_page(ajax_url_1)
 
 @app.task
 def excute_home_task():
@@ -80,3 +84,4 @@ def excute_home_task():
     for id_obj in id_objs:
         app.send_task('tasks.home.crawl_weibo_datas', args=(id_obj.uid,), queue='home_crawler',
                       routing_key='home_info')
+        # crawl_weibo_datas(id_obj.uid)
