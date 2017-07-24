@@ -19,3 +19,11 @@ def insert_weibo_pics(weibo_pics):
     	if not r:
         	db_session.add(pic)
     db_session.commit()
+
+
+# select pic_url from db limit number
+# [(uid, url), ...]
+def get_pic_url_by_limit(num):
+	# r = db_session.query(WeiboPic.pic_url).filter(text('dl_flag=0')).limit(num)
+	r = db_session.query(WeiboPic.uid, WeiboPic.pic_url).filter(WeiboPic.dl_flag == 0).limit(num).all()
+	return r

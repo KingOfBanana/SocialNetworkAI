@@ -112,6 +112,8 @@ weibo_pic = Table("weibo_pic", metadata,
                   Column("uid", String(20)),
                   Column("pic_url", String(300)),
                   Column("url_hash", String(64)),
+                  Column('dl_flag', INTEGER),
+                  Column('judge_flag', INTEGER)
                   )
 
 __all__ = ['login_info', 'wbuser', 'seed_ids', 'keywords', 'weibo_data', 'keywords_wbdata', 'weibo_comment',

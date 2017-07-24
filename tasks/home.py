@@ -10,6 +10,7 @@ from config.conf import get_max_home_page
 from page_parse.home import get_wbdata_fromweb, get_home_wbdata_byajax, get_total_page
 # new import for wb_pic
 from db.wb_pic import insert_weibo_pics
+from db.seed_ids import set_seed_home_crawled
 
 # 只抓取原创微博
 home_url = 'http://weibo.com/u/{}?is_ori=1&is_tag=0&profile_ftype=1&page={}'
@@ -76,6 +77,10 @@ def crawl_weibo_datas(uid):
                       routing_key='ajax_home_info')
         # crawl_ajax_page(ajax_url_0)
         # crawl_ajax_page(ajax_url_1)
+
+    # 在遍历完所有页数之后，将flag置位。放在这里表示所有页面都遍历过，不保证遍历成功后置位。可能以后还要优化，即在
+    # 某个回调函数中使用它。
+    set_seed_home_crawled(uid)
 
 @app.task
 def excute_home_task():
