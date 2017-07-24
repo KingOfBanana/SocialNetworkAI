@@ -42,7 +42,20 @@ def crawl_ajax_page(url):
 def crawl_weibo_datas(uid):
     limit = get_max_home_page()
     cur_page = 1
+
+    # 自定义最大爬取的页数
+    max_page = 10
+    # end
+
     while cur_page <= limit:
+
+        # 有些微博账号的照片多达两三千张，如果全部爬取比较浪费时间，这里先简单粗暴地根据当前微博的页数
+        # 进行限制。经过调查发现10页左右应该是比较理想的数字，电脑版微博一页有45条微博，那么一个账户就是
+        # 450条微博。
+        if cur_page > max_page:
+            break
+        # end
+
         url = home_url.format(uid, cur_page)
         html = get_page(url)
         weibo_datas, weibo_pics = get_wbdata_fromweb(html)
@@ -81,6 +94,7 @@ def crawl_weibo_datas(uid):
     # 在遍历完所有页数之后，将flag置位。放在这里表示所有页面都遍历过，不保证遍历成功后置位。可能以后还要优化，即在
     # 某个回调函数中使用它。
     set_seed_home_crawled(uid)
+    # end
 
 @app.task
 def excute_home_task():
