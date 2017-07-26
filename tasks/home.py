@@ -58,6 +58,14 @@ def crawl_weibo_datas(uid):
 
         url = home_url.format(uid, cur_page)
         html = get_page(url)
+
+        domain = public.get_userdomain(html)
+        # 只爬取微博个人用户的相片，如果是非个人用户（如政府，组织等）不爬取。
+        if domain not in ['103505', '100306', '100505', '']:
+            set_seed_home_crawled(uid, 2)
+            return
+        # end
+
         weibo_datas, weibo_pics = get_wbdata_fromweb(html)
 
         if not weibo_datas:
@@ -71,7 +79,6 @@ def crawl_weibo_datas(uid):
             insert_weibo_pics(weibo_pics)
         # end
 
-        domain = public.get_userdomain(html)
         cur_time = int(time.time()*1000)
         ajax_url_0 = ajax_url.format(domain, 0, domain, uid, cur_page, cur_page, cur_time)
         ajax_url_1 = ajax_url.format(domain, 1, domain, uid, cur_page, cur_page, cur_time+100)
@@ -88,8 +95,7 @@ def crawl_weibo_datas(uid):
 
         app.send_task('tasks.home.crawl_ajax_page', args=(ajax_url_1,), queue='ajax_home_crawler',
                       routing_key='ajax_home_info')
-        # crawl_ajax_page(ajax_url_0)
-        # crawl_ajax_page(ajax_url_1)
+        
 
     # 在遍历完所有页数之后，将flag置位。放在这里表示所有页面都遍历过，不保证遍历成功后置位。可能以后还要优化，即在
     # 某个回调函数中使用它。
@@ -103,4 +109,3 @@ def excute_home_task():
     for id_obj in id_objs:
         app.send_task('tasks.home.crawl_weibo_datas', args=(id_obj.uid,), queue='home_crawler',
                       routing_key='home_info')
-        # crawl_weibo_datas(id_obj.uid)

@@ -8,7 +8,7 @@ from decorators.decorator import db_commit_decorator
 def get_pic_by_url(url, url_hash):
 	r = db_session.query(WeiboPic).filter(WeiboPic.url_hash == url_hash).first()
 	if r:
-		if r.url == url:
+		if r.pic_url == url:
 			return True
 	return False
 

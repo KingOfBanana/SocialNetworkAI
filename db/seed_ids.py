@@ -64,16 +64,18 @@ def set_seed_other_crawled(uid):
     db_session.commit()
 
 
+# 设置home_crawled: 0-未爬取 1-爬取成功 2-未爬取主动跳过 3-爬取中遇到问题退出（爬到一半）
+# 4-只爬取了图片 5-第一页就没有找到图片，说明大概率是没有发过带图微博的
 @db_commit_decorator
-def set_seed_home_crawled(uid):
+def set_seed_home_crawled(uid, home_flag=1):
     """
     :param uid: user id
     :return: None
     """
     seed = get_seed_by_id(uid)
     if seed is None:
-        seed = SeedIds(uid=uid, is_crawled=0, other_crawled=0, home_crawled=1)
+        seed = SeedIds(uid=uid, is_crawled=0, other_crawled=0, home_crawled=home_flag)
         db_session.add(seed)
     else:
-        seed.home_crawled = 1
+        seed.home_crawled = home_flag
     db_session.commit()

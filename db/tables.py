@@ -108,12 +108,12 @@ user_relation = Table("user_relation", metadata,
 # pics in each weibo, one pic one record
 weibo_pic = Table("weibo_pic", metadata,
                   Column('id', INTEGER, primary_key=True, autoincrement=True),
-                  Column("weibo_id", String(200)),
-                  Column("uid", String(20)),
-                  Column("pic_url", String(300)),
+                  Column("weibo_id", String(20)),
+                  Column("uid", String(12)),
+                  Column("pic_url", String(80)),
                   Column("url_hash", String(64)),
-                  Column('dl_flag', INTEGER),
-                  Column('judge_flag', INTEGER)
+                  Column('dl_flag', INTEGER, default=0, server_default='0'),
+                  Column('judge_flag', INTEGER, default=0, server_default='0')
                   )
 
 __all__ = ['login_info', 'wbuser', 'seed_ids', 'keywords', 'weibo_data', 'keywords_wbdata', 'weibo_comment',

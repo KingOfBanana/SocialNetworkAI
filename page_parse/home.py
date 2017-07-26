@@ -78,7 +78,10 @@ def get_weibo_info_detail(each, html):
             wb_pic.uid = wb_data.uid
             wb_pic.weibo_id = wb_data.weibo_id
             wb_pic.pic_url = pic.find('img').get('src')
-            wb_pic.url_hash = md5Encode(wb_pic.pic_url)
+            # wb_pic.url_hash = md5Encode(wb_pic.pic_url)
+            wb_pic.url_hash = re.match('.*/thumb150/(.*).jpg', wb_pic.pic_url).group(1)
+            wb_pic.dl_flag = 0
+            wb_pic.judge_flag = 0
             weibo_pic.append(wb_pic)
     # end
 
