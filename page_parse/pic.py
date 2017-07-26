@@ -248,7 +248,8 @@ def get_wbdata_fromweb(html):
 #         return 1
 #     return get_max_num(cont)
 def get_pic_data_byajax(html):
-    if not html:
+    try:
+        cont = json.loads(html, encoding='utf-8').get('data', '')
+    except Exception as e:
         return [], []
-    cont = json.loads(html, encoding='utf-8').get('data', '')
     return get_pic_list(cont), get_next_ajax_url(cont)
