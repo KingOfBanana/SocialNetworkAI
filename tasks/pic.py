@@ -16,7 +16,7 @@ home_url = 'http://weibo.com/u/{}?is_ori=1&is_tag=0&profile_ftype=1&page={}'
 pic_url = 'http://weibo.com/p/{}/photos?from={}&mod=TAB#place'
 ajax_url = 'http://weibo.com/p/aj/album/loading?ajwvr=6&page_id={}&page={}&ajax_call={}&__rnd={}'
 
-@app.task(ignore_result=True)
+# @app.task(ignore_result=True)
 def crawl_weibo_pics(uid):
     limit = get_max_home_page()
     cur_page = 1
@@ -43,7 +43,11 @@ def crawl_weibo_pics(uid):
 
     weibo_pics, next_ajax_url = get_wbdata_fromweb(html)
 
-    print(weibo_pics, next_ajax_url)
+    if weibo_pics is None or next_ajax_url is None:
+        crawler.warning('用户id为{}的用户相册未采集成功，请检查原因'.format(uid))
+        set_seed_home_crawled(uid, 3)
+        return
+
     if not weibo_pics:
         crawler.warning('用户id为{}的用户相册未采集成功，可能是因为TA没有发过带图微博'.format(uid))
         set_seed_home_crawled(uid, 5)
@@ -70,19 +74,22 @@ def crawl_weibo_pics(uid):
         ajax_call = 1
         page_id = domain_uid
         url = ajax_url.format(page_id, cur_page, ajax_call, cur_time) + '&' + next_ajax_url
-        print(url)
         html = get_page(url, user_verify=False)
 
         weibo_pics, next_ajax_url = get_pic_data_byajax(html)
         
+        if weibo_pics is None or next_ajax_url is None:
+            crawler.warning('用户id为{}的用户相册未采集成功，请检查原因'.format(uid))
+            set_seed_home_crawled(uid, 3)
+            return
+
         if not weibo_pics:
             crawler.warning('用户id为{}的用户相册未采集成功，请检查原因'.format(uid))
             set_seed_home_crawled(uid, 3)
             return
         
         insert_weibo_pics(weibo_pics)
-        print(weibo_pics, next_ajax_url)
-
+        
         if not next_ajax_url:
             crawler.warning('用户id为{}的相册采集完成'.format(uid))
             set_seed_home_crawled(uid, 4)
@@ -90,19 +97,17 @@ def crawl_weibo_pics(uid):
 
         cur_page += 1
         
-    # 在完成规定的最大爬取页数后主动退出，将标志位置位为1
+    # 在完成规定的最大爬取页数后主动退出，将标志位置位为4
     set_seed_home_crawled(uid, 4)
     return
     # end
 
 
-@app.task
+# @app.task
 def excute_pic_task():
     # 这里的策略由自己指定，可以基于已有用户做主页抓取，也可以指定一些用户,我这里直接选的种子数据库中的uid
-    id_objs = get_home_ids()
+    id_objs = get_home_ids(5)
     for id_obj in id_objs:
-        app.send_task('tasks.pic.crawl_weibo_pics', args=(id_obj.uid,), queue='pic_crawler',
-                      routing_key='pic_info')
-        # crawl_weibo_pics(id_obj.uid)
-        # crawl_weibo_datas(id_obj.uid)
-    # crawl_weibo_pics('2880415412')
+        # app.send_task('tasks.pic.crawl_weibo_pics', args=(id_obj.uid,), queue='pic_crawler',
+        #               routing_key='pic_info')
+        crawl_weibo_pics(id_obj.uid)
