@@ -74,6 +74,7 @@ app.conf.update(
         Queue('repost_crawler', exchange=Exchange('repost_crawler', type='direct'), routing_key='repost_info'),
         Queue('repost_page_crawler', exchange=Exchange('repost_page_crawler', type='direct'),
               routing_key='repost_page_info'),
+        Queue('pic_crawler', exchange=Exchange('pic_crawler', type='direct'),routing_key='pic_info'),
     ),
 
 )
