@@ -101,7 +101,11 @@ def get_wbdata_fromweb(html):
     cont = get_pic_info_from_script(html)
     return get_pic_list(cont), get_next_ajax_url(cont)
 
+# json.load有时候会出现意外的exception，又因为接收的是两个返回值，不好加装饰器，
+# 所以直接用try catch的形式。
 def get_pic_data_byajax(html):
-    
-    cont = json.loads(html, encoding='utf-8').get('data', '')
+    try:
+        cont = json.loads(html, encoding='utf-8').get('data', '')
+    except Exception as e:
+        return None, None
     return get_pic_list(cont), get_next_ajax_url(cont)

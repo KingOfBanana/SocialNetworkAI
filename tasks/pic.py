@@ -16,7 +16,7 @@ home_url = 'http://weibo.com/u/{}?is_ori=1&is_tag=0&profile_ftype=1&page={}'
 pic_url = 'http://weibo.com/p/{}/photos?from={}&mod=TAB#place'
 ajax_url = 'http://weibo.com/p/aj/album/loading?ajwvr=6&page_id={}&page={}&ajax_call={}&__rnd={}'
 
-# @app.task(ignore_result=True)
+@app.task(ignore_result=True)
 def crawl_weibo_pics(uid):
     limit = get_max_home_page()
     cur_page = 1
@@ -103,11 +103,11 @@ def crawl_weibo_pics(uid):
     # end
 
 
-# @app.task
+@app.task
 def excute_pic_task():
     # 这里的策略由自己指定，可以基于已有用户做主页抓取，也可以指定一些用户,我这里直接选的种子数据库中的uid
-    id_objs = get_home_ids(5)
+    id_objs = get_home_ids(0)
     for id_obj in id_objs:
-        # app.send_task('tasks.pic.crawl_weibo_pics', args=(id_obj.uid,), queue='pic_crawler',
-        #               routing_key='pic_info')
-        crawl_weibo_pics(id_obj.uid)
+        app.send_task('tasks.pic.crawl_weibo_pics', args=(id_obj.uid,), queue='pic_crawler',
+                      routing_key='pic_info')
+        # crawl_weibo_pics(id_obj.uid)
