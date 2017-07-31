@@ -168,7 +168,7 @@ class IdNames(object):
             return user_id.decode('utf-8')
         return ''
 
-class Proxys(object):
+class Proxys_Redis(object):
     rd_con = redis.StrictRedis(host=redis_args.get('host'), port=redis_args.get('port'),
                                password=redis_args.get('password'), db=redis_args.get('proxy'))
 
@@ -181,5 +181,17 @@ class Proxys(object):
         return cls.rd_con.hgetall('proxy')
 
     @classmethod
+    def get_one_proxy(cls):
+        result = cls.rd_con.hgetall('proxy')
+        if result:
+            return result.keys()
+        else:
+            return ''
+
+    @classmethod
     def del_proxy(cls, proxy):
         cls.rd_con.hdel('proxy', proxy)
+
+    @classmethod
+    def cnt_proxy(cls):
+        return cls.rd_con.hlen('proxy')
