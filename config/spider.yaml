@@ -29,25 +29,25 @@ cookie_expire_time: 23
 
 
 db:
-    host: 121.42.166.247
-    port: 3306
-    user: 2016_lecture
-    password: 172826
-    db_name: weibo
+    host: ''
+    port: ''
+    user: ''
+    password: ''
+    db_name: ''
     db_type: mysql
 
 proxy_db:
-    host: 121.42.166.247
-    port: 3306
-    user: 2016_lecture
-    password: 172826
-    db_name: proxy
+    host: ''
+    port: ''
+    user: ''
+    password: ''
+    db_name: ''
     db_type: mysql
 
 redis:
-    host: 121.42.166.247
-    port: 6379
-    password: 172826
+    host: ''
+    port: ''
+    password: ''
     cookies: 1                   # store and fetch cookies
     urls: 2                      # store fetched urls and results
     broker: 5                    # broker for celery
