@@ -55,3 +55,7 @@ class UserRelation(Base):
 
 class WeiboPic(Base):
     __table__ = weibo_pic
+
+class Proxys(Base):
+    __table__ = proxys
+    __bind_key__ = 'proxy_db_eng'

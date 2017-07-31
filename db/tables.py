@@ -1,6 +1,8 @@
 # -*-coding:utf-8 -*-
 from sqlalchemy import Table, Column, INTEGER, String
+from sqlalchemy import DateTime, Numeric, VARCHAR
 from db.basic_db import metadata
+from db.basic_db import proxy_db_metadata
 
 # login table
 login_info = Table("login_info", metadata,
@@ -116,5 +118,21 @@ weibo_pic = Table("weibo_pic", metadata,
                   Column('judge_flag', INTEGER, default=0, server_default='0')
                   )
 
+
+# proxy table
+proxys = Table("proxys", proxy_db_metadata,
+                  Column('id', INTEGER, primary_key=True, autoincrement=True),
+                  Column('ip', VARCHAR(16), nullable=False),
+                  Column('port', INTEGER, nullable=False),
+                  Column('types', INTEGER, nullable=False),
+                  Column('protocol', INTEGER, nullable=False, default=0),
+                  Column('country', VARCHAR(100), nullable=False),
+                  Column('area', VARCHAR(100), nullable=False),
+                  Column('updatetime', DateTime()),
+                  Column('speed', Numeric(5, 2), nullable=False),
+                  Column('score', INTEGER, nullable=False)
+                  )
+
+
 __all__ = ['login_info', 'wbuser', 'seed_ids', 'keywords', 'weibo_data', 'keywords_wbdata', 'weibo_comment',
-           'weibo_repost', 'user_relation', 'weibo_pic']
+           'weibo_repost', 'user_relation', 'weibo_pic', 'proxys']

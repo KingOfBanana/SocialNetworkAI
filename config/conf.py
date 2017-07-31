@@ -15,6 +15,8 @@ cf = load(cont)
 def get_db_args():
     return cf.get('db')
 
+def get_proxy_db_args():
+    return cf.get('proxy_db')
 
 def get_redis_args():
     return cf.get('redis')

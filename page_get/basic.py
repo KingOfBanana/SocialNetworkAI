@@ -28,7 +28,7 @@ def is_banned(url):
 
 @timeout(200)
 @timeout_decorator
-def get_page(url, user_verify=True, need_login=True):
+def get_page(url, user_verify=True, need_login=True, proxies={}):
     """
     :param url: url to be crawled
     :param user_verify: if it's ajax url, the value is False, else True
@@ -56,7 +56,11 @@ def get_page(url, user_verify=True, need_login=True):
                     Cookies.delete_cookies(name_cookies[0])
                     continue
             else:
-                resp = requests.get(url, headers=headers, timeout=time_out, verify=False)
+                # resp = requests.get(url, headers=headers, timeout=time_out, verify=False)
+
+                # test for proxy
+                resp = requests.get(url, headers=headers, timeout=time_out, verify=False, proxies=proxies)
+                # end
 
             page = resp.text
 

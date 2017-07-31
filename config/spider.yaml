@@ -29,15 +29,23 @@ cookie_expire_time: 23
 
 
 db:
-    host: localhost
+    host: 121.42.166.247
     port: 3306
     user: 2016_lecture
     password: 172826
     db_name: weibo
     db_type: mysql
 
+proxy_db:
+    host: 121.42.166.247
+    port: 3306
+    user: 2016_lecture
+    password: 172826
+    db_name: proxy
+    db_type: mysql
+
 redis:
-    host: localhost
+    host: 121.42.166.247
     port: 6379
     password: 172826
     cookies: 1                   # store and fetch cookies
@@ -45,6 +53,7 @@ redis:
     broker: 5                    # broker for celery
     backend: 6                   # backed for celery
     id_name: 8                   # user id and names，for repost info analysis
+    proxy: 10                    # used for storing proxy data
 
 # warning by email
 email:

@@ -13,12 +13,12 @@ def get_seed_ids():
     return db_session.query(SeedIds.uid).filter(text('is_crawled=0')).all()
 
 
-def get_home_ids(status = 0):
+def get_home_ids(status = 0, num = 100):
     """
     Get all user id who's home pages need to be crawled
     :return: user ids
     """
-    return db_session.query(SeedIds).filter(SeedIds.home_crawled == status).all()
+    return db_session.query(SeedIds).filter(SeedIds.home_crawled == status).limit(num).all()
 
 
 @db_commit_decorator

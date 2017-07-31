@@ -167,3 +167,19 @@ class IdNames(object):
         if user_id:
             return user_id.decode('utf-8')
         return ''
+
+class Proxys(object):
+    rd_con = redis.StrictRedis(host=redis_args.get('host'), port=redis_args.get('port'),
+                               password=redis_args.get('password'), db=redis_args.get('proxy'))
+
+    @classmethod
+    def store_proxy_data(cls, proxy, score = 5):
+        cls.rd_con.hset('proxy', proxy, score)
+
+    @classmethod
+    def get_all_proxy(cls):
+        return cls.rd_con.hgetall('proxy')
+
+    @classmethod
+    def del_proxy(cls, proxy):
+        cls.rd_con.hdel('proxy', proxy)

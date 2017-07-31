@@ -13,7 +13,7 @@ worker_log_path = os.path.join(os.path.dirname(os.path.dirname(__file__))+'/logs
 beat_log_path = os.path.join(os.path.dirname(os.path.dirname(__file__))+'/logs', 'beat.log')
 
 # tasks = ['tasks.login', 'tasks.user', 'tasks.search', 'tasks.home', 'tasks.comment', 'tasks.repost']
-tasks = ['tasks.login', 'tasks.user', 'tasks.search', 'tasks.home', 'tasks.comment', 'tasks.repost', 'tasks.pic']
+tasks = ['tasks.login', 'tasks.user', 'tasks.search', 'tasks.home', 'tasks.comment', 'tasks.repost', 'tasks.pic', 'tasks.weibo']
 
 app = Celery('weibo_task', include=tasks, broker=get_broker_or_backend(1), backend=get_broker_or_backend(2))
 
@@ -75,6 +75,7 @@ app.conf.update(
         Queue('repost_page_crawler', exchange=Exchange('repost_page_crawler', type='direct'),
               routing_key='repost_page_info'),
         Queue('pic_crawler', exchange=Exchange('pic_crawler', type='direct'),routing_key='pic_info'),
+        Queue('weibo_crawler', exchange=Exchange('weibo_crawler', type='direct'),routing_key='weibo_info'),
     ),
 
 )
