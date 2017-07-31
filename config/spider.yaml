@@ -29,7 +29,7 @@ cookie_expire_time: 23
 
 
 db:
-    host: ''
+    host: '123456'
     port: ''
     user: ''
     password: ''
