@@ -29,31 +29,22 @@ cookie_expire_time: 23
 
 
 db:
-    host: ''
-    port: ''
-    user: ''
-    password: ''
-    db_name: ''
-    db_type: mysql
-
-proxy_db:
-    host: ''
-    port: ''
-    user: ''
-    password: ''
-    db_name: ''
+    host: 121.42.166.247
+    port: 3306
+    user: 2016_lecture
+    password: 172826
+    db_name: weibo
     db_type: mysql
 
 redis:
-    host: ''
-    port: ''
-    password: ''
+    host: 121.42.166.247
+    port: 6379
+    password: 172826
     cookies: 1                   # store and fetch cookies
     urls: 2                      # store fetched urls and results
     broker: 5                    # broker for celery
     backend: 6                   # backed for celery
     id_name: 8                   # user id and names，for repost info analysis
-    proxy: 10                    # used for storing proxy data
 
 # warning by email
 email:
