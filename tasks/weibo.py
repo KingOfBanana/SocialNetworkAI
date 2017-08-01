@@ -14,7 +14,7 @@ from db.db_proxy import set_proxy_score, get_a_random_proxy
 
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
-# @app.task(ignore_result=True)
+@app.task(ignore_result=True)
 def crawl_weibo(uid):
 
     limit = get_max_home_page()
@@ -96,14 +96,14 @@ def crawl_weibo(uid):
     set_proxy_score(proxy, 1)
     return
 
-# @app.task
+@app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 20)
+    id_objs = get_home_ids(0, 500)
 
     for id_obj in id_objs:
-        # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
-        #               routing_key='weibo_info')
-        crawl_weibo(id_obj.uid)
+        app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
+                      routing_key='weibo_info')
+        # crawl_weibo(id_obj.uid)
 
 
 
