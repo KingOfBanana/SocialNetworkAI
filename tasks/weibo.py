@@ -14,15 +14,11 @@ from db.db_proxy import set_proxy_score, get_a_random_proxy
 
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
-@app.task(ignore_result=True)
+# @app.task(ignore_result=True)
 def crawl_weibo(uid):
 
     limit = get_max_home_page()
     cur_page = 1
-
-    # 自定义最大爬取的页数
-    max_page = 70
-    # end
 
     containerid = '230413' + uid
     luicode = '10000011'
@@ -33,6 +29,7 @@ def crawl_weibo(uid):
     page = cur_page
 
     proxy = get_a_random_proxy()
+    print(proxy)
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
 
@@ -46,6 +43,12 @@ def crawl_weibo(uid):
 
     weibo_pics = get_weibo_list(html)
 
+    if weibo_pics == None:
+        crawler.warning('用户id为{}的相册采集出错'.format(uid))
+        set_seed_home_crawled(uid, 3)
+        set_proxy_score(proxy, -2)
+        return
+
     if weibo_pics == []:
         crawler.warning('用户id为{}的相册采集完成'.format(uid))
         set_seed_home_crawled(uid, 4)
@@ -56,11 +59,8 @@ def crawl_weibo(uid):
         insert_weibo_pics(weibo_pics)
     cur_page += 1
 
-    
-    
     while cur_page <= limit:
-        if cur_page > max_page:
-            return
+        
         page = cur_page
         url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
         html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
@@ -74,6 +74,12 @@ def crawl_weibo(uid):
         # end
 
         weibo_pics = get_weibo_list(html)
+
+        if weibo_pics == None:
+            crawler.warning('用户id为{}的相册采集出错'.format(uid))
+            set_seed_home_crawled(uid, 3)
+            set_proxy_score(proxy, -2)
+            return
 
         if weibo_pics == []:
             crawler.warning('用户id为{}的相册采集完成'.format(uid))
@@ -90,14 +96,14 @@ def crawl_weibo(uid):
     set_proxy_score(proxy, 1)
     return
 
-@app.task
+# @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 2000)
+    id_objs = get_home_ids(0, 20)
 
     for id_obj in id_objs:
-        app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
-                      routing_key='weibo_info')
-        # crawl_weibo(id_obj.uid)
+        # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
+        #               routing_key='weibo_info')
+        crawl_weibo(id_obj.uid)
 
 
 

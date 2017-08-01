@@ -62,17 +62,17 @@ def set_proxy_score(proxy_dict, new_score, relative = True):
 def parse_a_proxy_to_dict(proxy):
 	if proxy:
 		if proxy.protocol == 0 or proxy.protocol == 2:
-			addr = 'http:' + proxy.ip + ':' + str(proxy.port)
+			addr = 'http://' + proxy.ip + ':' + str(proxy.port)
 			prot = 'http:'
 			return {prot: addr}
 		elif proxy.protocol == 1:
-			addr = 'https:' + proxy.ip + ':' + str(proxy.port)
+			addr = 'https://' + proxy.ip + ':' + str(proxy.port)
 			prot = 'https:'
 			return {prot: addr}
 		return {}
 		
 def get_a_random_proxy():
-	proxys = fetch_proxy(10)
+	proxys = fetch_proxy(40)
 	count = len(proxys)
 	if count == 0:
 		return {}
