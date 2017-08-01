@@ -3,7 +3,7 @@
 from db.basic_db import proxy_db_session
 from db.models import Proxys
 from db.redis_db import Proxys_Redis
-from db.db_proxy import count_proxy, fetch_proxy, get_proxy_by_dict, set_proxy_score, del_proxy_by_id
+from db.db_proxy import count_proxy, fetch_proxy, get_proxy_by_dict, set_proxy_score, del_proxy_by_id, get_a_random_proxy
 
 # 获取一定数量的代理，如果这时候还未初始化，则先从sql中获取一定数量的代理放入redis中
 def get_proxy(num = 1):
@@ -22,6 +22,5 @@ def get_proxy(num = 1):
 
 # test code
 if __name__ == '__main__':
-	if set_proxy_score({'http': 'http://120.77.203.202:8888'}, 2) != 0:
-		print('safe!')
+	print(get_a_random_proxy())
 # end

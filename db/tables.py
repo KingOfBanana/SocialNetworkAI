@@ -42,6 +42,7 @@ seed_ids = Table('seed_ids', metadata,
                  Column("is_crawled", INTEGER, default=0, server_default='0'),
                  Column("other_crawled", INTEGER, default=0, server_default='0'),
                  Column("home_crawled", INTEGER, default=0, server_default='0'),
+                 Column("update_time", INTEGER, default=0, server_default='0'),
                  )
 
 # search keywords table

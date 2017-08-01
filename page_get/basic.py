@@ -103,11 +103,11 @@ def get_page(url, user_verify=True, need_login=True, proxys={}):
             time.sleep(excp_interal)
 
         else:
-            Urls.store_crawl_url(url, 1)
+            # Urls.store_crawl_url(url, 1)
             return page
 
     crawler.warning('max tries for {}，check the url in redis db2'.format(url))
-    Urls.store_crawl_url(url, 0)
+    # Urls.store_crawl_url(url, 0)
     return ''
 
 __all__ = ['get_page']

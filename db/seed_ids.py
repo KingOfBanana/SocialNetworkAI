@@ -3,7 +3,7 @@ from sqlalchemy import text
 from db.basic_db import db_session
 from db.models import SeedIds
 from decorators.decorator import db_commit_decorator
-
+from time import time
 
 def get_seed_ids():
     """
@@ -55,12 +55,14 @@ def set_seed_other_crawled(uid):
     :param uid: user id
     :return: None
     """
+    timestamp = int(time())
     seed = get_seed_by_id(uid)
     if seed is None:
-        seed = SeedIds(uid=uid, is_crawled=1, other_crawled=1, home_crawled=1)
+        seed = SeedIds(uid=uid, is_crawled=1, other_crawled=1, home_crawled=1, update_time=timestamp)
         db_session.add(seed)
     else:
         seed.other_crawled = 1
+        seed.update_time = timestamp
     db_session.commit()
 
 
@@ -72,10 +74,12 @@ def set_seed_home_crawled(uid, home_flag=1):
     :param uid: user id
     :return: None
     """
+    timestamp = int(time())
     seed = get_seed_by_id(uid)
     if seed is None:
-        seed = SeedIds(uid=uid, is_crawled=0, other_crawled=0, home_crawled=home_flag)
+        seed = SeedIds(uid=uid, is_crawled=0, other_crawled=0, home_crawled=home_flag, update_time=timestamp)
         db_session.add(seed)
     else:
         seed.home_crawled = home_flag
+        seed.update_time = timestamp
     db_session.commit()

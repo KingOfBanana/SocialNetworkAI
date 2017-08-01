@@ -8,10 +8,15 @@ from random import randint
 def count_proxy():
 	return (proxy_db_session.query(func.count(Proxys.id)).first())[0]
 
+# 正常情况下如果count>num，返回num条，否则返回count条，其他情况返回空数组
 def fetch_proxy(num = 1):
+	if num <= 0:
+		return []
 	count = count_proxy()
 	if count >= num:
 		return proxy_db_session.query(Proxys).order_by(Proxys.speed).limit(num).all()
+	elif count > 0:
+		return proxy_db_session.query(Proxys).order_by(Proxys.speed).limit(count).all()
 	else:
 		return []
 
@@ -48,34 +53,30 @@ def set_proxy_score(proxy_dict, new_score, relative = True):
 			proxy.score = proxy.score + new_score
 		else:
 			proxy.score = new_score
-		if proxy.score == 0:
+		if proxy.score <= 0:
 			del_proxy_by_id(proxy.id)
 			return None
 		proxy_db_session.commit()
 
-# def change_proxy_score(proxy_dict, delta):
-# 	score = get_proxy_score(proxy_dict, )
-# 	new_score = score + delta
 
-# 获取一定数量的代理，返回的是requests proxy可以直接用的字典型数组
-def get_proxy(num = 1):
-	result = []
-	proxys = fetch_proxy(num)
-	if proxys:
-		for proxy in proxys:
-			if proxy.protocol == 0 or proxy.protocol == 2:
-				addr = 'http:' + proxy.ip + ':' + str(proxy.port)
-				prot = 'http:'
-			elif proxy.protocol == 1:
-				addr = 'https:' + proxy.ip + ':' + str(proxy.port)
-				prot = 'https:'
-			result.append({prot: addr})
-	return result
-
-def get_a_random_proxy():
-	proxys = get_proxy()
-	if proxys:
-		return proxys[0]
-	else:
+def parse_a_proxy_to_dict(proxy):
+	if proxy:
+		if proxy.protocol == 0 or proxy.protocol == 2:
+			addr = 'http:' + proxy.ip + ':' + str(proxy.port)
+			prot = 'http:'
+			return {prot: addr}
+		elif proxy.protocol == 1:
+			addr = 'https:' + proxy.ip + ':' + str(proxy.port)
+			prot = 'https:'
+			return {prot: addr}
 		return {}
+		
+def get_a_random_proxy():
+	proxys = fetch_proxy(10)
+	count = len(proxys)
+	if count == 0:
+		return {}
+	index = randint(0, count-1)
+	return parse_a_proxy_to_dict(proxys[index])
+		
 

@@ -63,14 +63,23 @@ def parse_dict_to_wb_list(wb_dict):
                 one_wb_pic_list = mblog_to_db_handler(card['mblog'])
                 if one_wb_pic_list:
                     weibo_pic_list.extend(one_wb_pic_list)
-    return weibo_pic_list
+    if weibo_pic_list:
+        return weibo_pic_list
+    else:
+        return None
 
+# [] - 该用户的微博已经被遍历到底
+# [data] - 正常解析
+# 其他各种异常情况
 def get_weibo_list(html):
     cont = parse_json_to_dict(html)
-    if check_no_bottom(cont):
+    check_bt_flag = check_no_bottom(cont)
+    if check_bt_flag:
         return parse_dict_to_wb_list(cont)
-    else:
+    elif check_bt_flag == False:
         return []
+    else:
+        return None
 
 @parse_decorator(2)
 def mblog_to_db_handler(mblog_dict):
@@ -96,20 +105,15 @@ def mblog_to_db_handler(mblog_dict):
 
 
 # 返回值为True代表未到达底部，否则已经是底部了
-@parse_decorator(3)
+# 返回False有可能是两种情况，一是确实到底部，二是解析错误，返回false。
+@parse_decorator(5)
 def check_no_bottom(wb_dict):
-    # if 'cardlistInfo' in wb_dict:
-    #     cardlistInfo = wb_dict['cardlistInfo']
-    #     if 'page' in cardlistInfo:
-    #         page = cardlistInfo['page']
-    #         if page == 'null':
-    #             return page
-    #         else:
-    #             return page
-    if wb_dict['cardlistInfo']['page']:
+    if wb_dict['cardlistInfo']['page'] or len(['cards']) > 1:
         return True
-    else:
+    elif len(['cards']) == 1 and wb_dict['cards'][0]['name'] == '暂无微博':
         return False
+    else:
+        return None
 
 
 
