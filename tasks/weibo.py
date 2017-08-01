@@ -29,10 +29,17 @@ def crawl_weibo(uid):
     page = cur_page
 
     proxy = get_a_random_proxy()
-    print(proxy)
+    
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
 
+    # test for proxy
+    # print(proxy)
+    # url = 'http://www.ip.cn/'
+    # html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
+    # print(html)
+    # test end
+    
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
     if html == '':
         crawler.warning('用户id为{}的相册采集出错'.format(uid))
@@ -98,7 +105,7 @@ def crawl_weibo(uid):
 
 @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 500)
+    id_objs = get_home_ids(0, 20)
 
     for id_obj in id_objs:
         app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',

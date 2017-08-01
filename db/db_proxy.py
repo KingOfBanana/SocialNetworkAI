@@ -63,11 +63,11 @@ def parse_a_proxy_to_dict(proxy):
 	if proxy:
 		if proxy.protocol == 0 or proxy.protocol == 2:
 			addr = 'http://' + proxy.ip + ':' + str(proxy.port)
-			prot = 'http:'
+			prot = 'http'
 			return {prot: addr}
 		elif proxy.protocol == 1:
 			addr = 'https://' + proxy.ip + ':' + str(proxy.port)
-			prot = 'https:'
+			prot = 'https'
 			return {prot: addr}
 		return {}
 		
