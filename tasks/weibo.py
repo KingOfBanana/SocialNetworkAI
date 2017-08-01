@@ -12,11 +12,6 @@ from db.wb_pic import insert_weibo_pics
 from db.seed_ids import set_seed_home_crawled
 from db.db_proxy import get_proxy, set_proxy_score
 
-# 因为pic_url里需要domain，所以得先从不需要domain只需要uid的home_url里面开始爬，获取domain
-# home_url = 'http://weibo.com/u/{}?is_ori=1&is_tag=0&profile_ftype=1&page={}'
-# pic_url = 'http://weibo.com/p/{}/photos?from={}&mod=TAB#place'
-# ajax_url = 'http://weibo.com/p/aj/album/loading?ajwvr=6&page_id={}&page={}&ajax_call={}&__rnd={}'
-
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
 @app.task(ignore_result=True)
@@ -39,6 +34,13 @@ def crawl_weibo(uid, proxys={}):
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxys)
     weibo_pics = get_weibo_list(html)
+
+    if weibo_pics == []:
+        crawler.warning('用户id为{}的相册采集完成'.format(uid))
+        set_seed_home_crawled(uid, 4)
+        set_proxy_score(proxys, 1)
+        return
+
     if weibo_pics:
         insert_weibo_pics(weibo_pics)
     cur_page += 1
@@ -60,8 +62,15 @@ def crawl_weibo(uid, proxys={}):
             return
         page = cur_page
         url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
-
+        html = get_page(url, user_verify=False, need_login=False, proxys=proxys)
         weibo_pics = get_weibo_list(html)
+
+        if weibo_pics == []:
+            crawler.warning('用户id为{}的相册采集完成'.format(uid))
+            set_seed_home_crawled(uid, 4)
+            set_proxy_score(proxys, 1)
+            return
+
         if weibo_pics:
             insert_weibo_pics(weibo_pics)
         cur_page += 1
