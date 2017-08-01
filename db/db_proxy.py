@@ -3,6 +3,7 @@ from db.basic_db import proxy_db_session
 from db.models import Proxys
 from decorators.decorator import db_commit_decorator
 from sqlalchemy import func
+from random import randint
 
 def count_proxy():
 	return (proxy_db_session.query(func.count(Proxys.id)).first())[0]
@@ -70,3 +71,11 @@ def get_proxy(num = 1):
 				prot = 'https:'
 			result.append({prot: addr})
 	return result
+
+def get_a_random_proxy():
+	proxys = get_proxy()
+	if proxys:
+		return proxys[0]
+	else:
+		return {}
+

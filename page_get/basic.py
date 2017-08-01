@@ -59,7 +59,8 @@ def get_page(url, user_verify=True, need_login=True, proxys={}):
                 # resp = requests.get(url, headers=headers, timeout=time_out, verify=False)
 
                 # test for proxy
-                resp = requests.get(url, headers=headers, timeout=time_out, verify=False, proxies=proxys)
+                # resp = requests.get(url, headers=headers, timeout=time_out, verify=False, proxies=proxys)
+                resp = requests.get(url, headers=headers, timeout=time_out, proxies=proxys)
                 # end
 
             page = resp.text
