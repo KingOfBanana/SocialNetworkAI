@@ -13,7 +13,7 @@ from db.seed_ids import set_seed_home_crawled
 from db.db_proxy import set_proxy_score, get_a_random_proxy
 
 # import for exception test
-from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
+# from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
 # end
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
@@ -26,7 +26,7 @@ def crawl_weibo(uid):
     pic_count = 0
     max_pic_count = 150
 
-    max_retry_cnt = 1
+    max_retry_cnt = 2
     cur_retry_cnt = 0
 
     containerid = '230413' + uid
@@ -41,6 +41,7 @@ def crawl_weibo(uid):
     
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
+
 
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
     # 如果重试还是返回空html，那么两个proxy均不扣分，记录uid异常后直接return，如果返回非空但无效的html，则在后面流程进行扣分
@@ -112,7 +113,7 @@ def crawl_weibo(uid):
 
 # @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 100)
+    id_objs = get_home_ids(0, 50)
 
     for id_obj in id_objs:
         # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
