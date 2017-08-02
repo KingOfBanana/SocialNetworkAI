@@ -8,6 +8,7 @@ from page_get import status
 from db.models import WeiboData, WeiboPic
 from decorators.decorator import parse_decorator
 
+@parse_decorator(3)
 def check_banned(html):
     soup = BeautifulSoup(html, "html.parser")
     if soup.p.text == '请求过于频繁,歇歇吧':
