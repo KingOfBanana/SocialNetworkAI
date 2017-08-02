@@ -62,6 +62,10 @@ def crawl_weibo(uid):
 
     weibo_pics = get_weibo_list(html)
 
+    if weibo_pics == '':
+        set_proxy_score(proxy, -1)
+        return
+
     if weibo_pics == None:
         exception_uid_handler(uid, 2, proxy, html)
         return
@@ -96,6 +100,11 @@ def crawl_weibo(uid):
         # end
 
         weibo_pics = get_weibo_list(html)
+
+        # 如果通过当前代理所获取到的页面是被封锁页面，则将当前代理降分并直接return
+        if weibo_pics == '':
+            set_proxy_score(proxy, -1)
+            return
 
         if weibo_pics == None:
             exception_uid_handler(uid, 4, proxy, html)

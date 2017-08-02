@@ -8,6 +8,12 @@ from page_get import status
 from db.models import WeiboData, WeiboPic
 from decorators.decorator import parse_decorator
 
+def check_banned(html):
+    soup = BeautifulSoup(html, "html.parser")
+    if soup.p.text == '请求过于频繁,歇歇吧':
+        return True
+    else:
+        return False
 
 @parse_decorator(5)
 def get_pic_list(html):
@@ -70,6 +76,8 @@ def parse_dict_to_wb_list(wb_dict):
 # [data] - 正常解析
 # 其他各种异常情况
 def get_weibo_list(html):
+    if check_banned(html):
+        return ''
     cont = parse_json_to_dict(html)
     check_bt_flag = check_no_bottom(cont)
     if check_bt_flag:
