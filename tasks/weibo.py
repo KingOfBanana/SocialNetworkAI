@@ -38,10 +38,13 @@ def crawl_weibo(uid):
     page = cur_page
 
     proxy = get_a_random_proxy()
+
+    # test for proxy
+    print(proxy)
+    # end
     
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
-
 
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
     # 如果重试还是返回空html，那么两个proxy均不扣分，记录uid异常后直接return，如果返回非空但无效的html，则在后面流程进行扣分
