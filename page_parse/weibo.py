@@ -108,9 +108,9 @@ def mblog_to_db_handler(mblog_dict):
 # 返回False有可能是两种情况，一是确实到底部，二是解析错误，返回false。
 @parse_decorator(5)
 def check_no_bottom(wb_dict):
-    if wb_dict['cardlistInfo']['page'] or len(['cards']) > 1:
+    if wb_dict['cardlistInfo']['page'] or len(wb_dict['cards']) > 1:
         return True
-    elif len(['cards']) == 1 and wb_dict['cards'][0]['name'] == '暂无微博':
+    elif len(wb_dict['cards']) == 1 and wb_dict['cards'][0]['name'] == '暂无微博':
         return False
     else:
         return None

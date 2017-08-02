@@ -33,19 +33,13 @@ def crawl_weibo(uid):
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
 
-    # test for proxy
-    # print(proxy)
-    # url = 'http://www.ip.cn/'
-    # html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
-    # print(html)
-    # test end
-    
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
+    # 此处可以进行一次延时，重试，不过具体策略还要再研究，以防出现多个页面的多次重试，导致时间的浪费
     if html == '':
         crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码001'.format(uid, html))
 
         set_seed_home_crawled(uid, 3)
-        set_proxy_score(proxy, -2)
+        set_proxy_score(proxy, -1)
         return
     # end
 
@@ -54,7 +48,7 @@ def crawl_weibo(uid):
     if weibo_pics == None:
         crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码002'.format(uid, html))
         set_seed_home_crawled(uid, 3)
-        set_proxy_score(proxy, -2)
+        set_proxy_score(proxy, -1)
         return
 
     if weibo_pics == []:
@@ -77,7 +71,7 @@ def crawl_weibo(uid):
         if html == '':
             crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码003'.format(uid, html))
             set_seed_home_crawled(uid, 3)
-            set_proxy_score(proxy, -2)
+            set_proxy_score(proxy, -1)
             return
         # end
 
@@ -86,7 +80,7 @@ def crawl_weibo(uid):
         if weibo_pics == None:
             crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码004'.format(uid, html))
             set_seed_home_crawled(uid, 3)
-            set_proxy_score(proxy, -2)
+            set_proxy_score(proxy, -1)
             return
 
         if weibo_pics == []:
@@ -106,7 +100,7 @@ def crawl_weibo(uid):
 
 @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 50)
+    id_objs = get_home_ids(0, 500)
 
     for id_obj in id_objs:
         app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
