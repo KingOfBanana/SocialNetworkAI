@@ -53,6 +53,7 @@ def parse_json_to_dict(html):
     cont = json.loads(html, encoding='utf-8')
     return cont
 
+# 如果在某一页中并没有收获到图片，也不应该判断为错误（None）
 @parse_decorator(5)
 def parse_dict_to_wb_list(wb_dict):
     weibo_pic_list = []
@@ -63,10 +64,7 @@ def parse_dict_to_wb_list(wb_dict):
                 one_wb_pic_list = mblog_to_db_handler(card['mblog'])
                 if one_wb_pic_list:
                     weibo_pic_list.extend(one_wb_pic_list)
-    if weibo_pic_list:
-        return weibo_pic_list
-    else:
-        return None
+    return weibo_pic_list
 
 # [] - 该用户的微博已经被遍历到底
 # [data] - 正常解析
@@ -77,7 +75,7 @@ def get_weibo_list(html):
     if check_bt_flag:
         return parse_dict_to_wb_list(cont)
     elif check_bt_flag == False:
-        return []
+        return False
     else:
         return None
 
@@ -108,10 +106,23 @@ def mblog_to_db_handler(mblog_dict):
 # 返回False有可能是两种情况，一是确实到底部，二是解析错误，返回false。
 @parse_decorator(5)
 def check_no_bottom(wb_dict):
-    if wb_dict['cardlistInfo']['page'] or len(wb_dict['cards']) > 1:
-        return True
-    elif len(wb_dict['cards']) == 1 and wb_dict['cards'][0]['name'] == '暂无微博':
-        return False
+    # if len(wb_dict['cards']) == 1 and wb_dict['cards'][0]['name'] == '暂无微博':
+    #     return False
+    # elif wb_dict['cardlistInfo']['page'] or len(wb_dict['cards']) >= 1:
+    #     return True
+    # else:
+    #     return None
+    if 'cards' in wb_dict:
+        if len(wb_dict['cards']) == 1:
+            if 'mblog' in wb_dict['cards'][0]:
+                return True
+            elif 'name' in wb_dict['cards'][0]:
+                if wb_dict['cards'][0]['name'] == '暂无微博':
+                    return False
+        elif len(wb_dict['cards']) > 1:
+            return True
+        else:
+            return None
     else:
         return None
 
