@@ -49,11 +49,11 @@ def crawl_weibo(uid):
     # 如果重试还是返回空html，那么两个proxy均不扣分，记录uid异常后直接return，如果返回非空但无效的html，则在后面流程进行扣分
     if html == '':
         if cur_retry_cnt < max_retry_cnt:
+            set_proxy_score(proxy, -1)
             proxy = get_a_random_proxy()
             html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
             if html == '':
-                crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，状态码{}'.format(uid, html, 5))
-                set_seed_home_crawled(uid, 3)
+                exception_uid_handler(uid, 5, proxy):
                 return
         else:
             exception_uid_handler(uid, 1, proxy)
@@ -88,11 +88,11 @@ def crawl_weibo(uid):
         # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
         if html == '':
             if cur_retry_cnt < max_retry_cnt:
+                set_proxy_score(proxy, -1)
                 proxy = get_a_random_proxy()
                 html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
                 if html == '':
-                    crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，状态码{}'.format(uid, html, 6))
-                    set_seed_home_crawled(uid, 3)
+                    exception_uid_handler(uid, 6, proxy):
                     return
             else:
                 exception_uid_handler(uid, 3, proxy)
