@@ -53,7 +53,7 @@ def crawl_weibo(uid):
             proxy = get_a_random_proxy()
             html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
             if html == '':
-                exception_uid_handler(uid, 5, proxy):
+                exception_uid_handler(uid, 5, proxy)
                 return
         else:
             exception_uid_handler(uid, 1, proxy)
@@ -92,7 +92,7 @@ def crawl_weibo(uid):
                 proxy = get_a_random_proxy()
                 html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
                 if html == '':
-                    exception_uid_handler(uid, 6, proxy):
+                    exception_uid_handler(uid, 6, proxy)
                     return
             else:
                 exception_uid_handler(uid, 3, proxy)
