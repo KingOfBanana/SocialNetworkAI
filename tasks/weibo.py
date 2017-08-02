@@ -39,10 +39,6 @@ def crawl_weibo(uid):
 
     proxy = get_a_random_proxy()
 
-    # test for proxy
-    print(proxy)
-    # end
-    
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
 
@@ -116,7 +112,7 @@ def crawl_weibo(uid):
 
 # @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 50)
+    id_objs = get_home_ids(0, 10)
 
     for id_obj in id_objs:
         # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
