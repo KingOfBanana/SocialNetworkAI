@@ -16,16 +16,16 @@ def fetch_proxy(status = 1, num = 1):
 	count = count_proxy()
 	if status == 1:
 		if count >= num:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.speed).limit(num).all()
+			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(num).all()
 		elif count > 0:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.speed).limit(count).all()
+			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(count).all()
 		else:
 			return []
 	elif status == 0:
 		if count >= num:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.speed).limit(num).all()
+			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(num).all()
 		elif count > 0:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.speed).limit(count).all()
+			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(count).all()
 		else:
 			return []
 

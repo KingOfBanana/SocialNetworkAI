@@ -10,7 +10,7 @@ from page_parse.weibo import get_weibo_list
 # new import for wb_pic
 from db.wb_pic import insert_weibo_pics
 from db.seed_ids import set_seed_home_crawled
-from db.db_proxy import set_proxy_score, get_a_random_proxy
+from db.db_proxy import set_proxy_score, get_a_random_proxy, fetch_proxy
 
 # import for exception test
 # from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
@@ -37,7 +37,10 @@ def crawl_weibo(uid):
     page_type = '03'
     page = cur_page
 
+    # print for proxy
     proxy = get_a_random_proxy()
+    print(proxy)
+    # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
@@ -112,7 +115,7 @@ def crawl_weibo(uid):
 
 # @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 10)
+    id_objs = get_home_ids(0, 1)
 
     for id_obj in id_objs:
         # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
