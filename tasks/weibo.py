@@ -105,7 +105,7 @@ def crawl_weibo(uid):
 
 @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 20)
+    id_objs = get_home_ids(0, 50)
 
     for id_obj in id_objs:
         app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
