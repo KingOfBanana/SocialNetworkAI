@@ -42,7 +42,8 @@ def crawl_weibo(uid):
     
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
     if html == '':
-        crawler.warning('用户id为{}的相册采集出错'.format(uid))
+        crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码001'.format(uid, html))
+
         set_seed_home_crawled(uid, 3)
         set_proxy_score(proxy, -2)
         return
@@ -51,7 +52,7 @@ def crawl_weibo(uid):
     weibo_pics = get_weibo_list(html)
 
     if weibo_pics == None:
-        crawler.warning('用户id为{}的相册采集出错'.format(uid))
+        crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码002'.format(uid, html))
         set_seed_home_crawled(uid, 3)
         set_proxy_score(proxy, -2)
         return
@@ -74,7 +75,7 @@ def crawl_weibo(uid):
 
         # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
         if html == '':
-            crawler.warning('用户id为{}的相册采集出错'.format(uid))
+            crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码003'.format(uid, html))
             set_seed_home_crawled(uid, 3)
             set_proxy_score(proxy, -2)
             return
@@ -83,7 +84,7 @@ def crawl_weibo(uid):
         weibo_pics = get_weibo_list(html)
 
         if weibo_pics == None:
-            crawler.warning('用户id为{}的相册采集出错'.format(uid))
+            crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，错误码004'.format(uid, html))
             set_seed_home_crawled(uid, 3)
             set_proxy_score(proxy, -2)
             return
