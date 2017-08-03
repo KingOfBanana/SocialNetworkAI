@@ -73,8 +73,8 @@ def proxy_handler(proxy_dict, new_score, relative=True):
 		return proxy_init()
 
 def proxy_init():
-	max_proxy_cnt = 20
-	if count_proxy() < int(max_proxy_cnt / 10):
+	max_proxy_cnt = int(20 / 10)
+	if count_proxy() <= max_proxy_cnt:
 		return get_proxy_to_db()
 	else:
 		return True
