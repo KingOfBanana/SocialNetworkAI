@@ -11,9 +11,14 @@ def insert_proxy(proxies):
 	    	if proxy:
 	        	proxy_db_session.add(proxy)
 	    proxy_db_session.commit()
+
 @db_commit_decorator
 def count_proxy():
-	return (proxy_db_session.query(func.count(Proxys.id)).first())[0]
+	cnt = (proxy_db_session.query(func.count(Proxys.id)).first())[0]
+	if type(cnt) == int:
+		return cnt
+	else:
+		return 0
 
 # 正常情况下如果count>num，返回num条，否则返回count条，其他情况返回空数组
 # 在这里只寻找https代理
@@ -36,7 +41,7 @@ def fetch_proxy(status = 1, num = 1):
 			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(count).all()
 		else:
 			return []
-			
+
 @db_commit_decorator
 def get_proxy_by_dict(proxy_dict):
 	if not proxy_dict:
