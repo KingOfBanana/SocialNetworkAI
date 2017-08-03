@@ -4,6 +4,7 @@ from db.basic_db import db_session
 from db.models import SeedIds
 from decorators.decorator import db_commit_decorator
 from time import time
+from sqlalchemy import func
 
 def get_seed_ids():
     """
@@ -20,6 +21,8 @@ def get_home_ids(status = 0, num = 100):
     """
     return db_session.query(SeedIds).filter(SeedIds.home_crawled == status).limit(num).all()
 
+def get_ids_by_home_flag_random(status = 0, num = 100):
+    return db_session.query(SeedIds).filter(SeedIds.home_crawled == status).order_by(func.random()).limit(num).all()
 
 @db_commit_decorator
 def set_seed_crawled(uid, result):

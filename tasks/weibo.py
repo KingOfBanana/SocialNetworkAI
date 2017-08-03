@@ -4,7 +4,7 @@ from logger.log import crawler
 from tasks.workers import app
 from page_parse.user import public
 from page_get.basic import get_page
-from db.seed_ids import get_home_ids
+from db.seed_ids import get_home_ids, get_ids_by_home_flag_random
 from config.conf import get_max_home_page
 from page_parse.weibo import get_weibo_list
 # new import for wb_pic
@@ -137,7 +137,7 @@ def crawl_weibo(uid):
 
 @app.task
 def excute_weibo_task():
-    id_objs = get_home_ids(0, 100)
+    id_objs = get_ids_by_home_flag_random(0, 100)
     proxy_init()
     for id_obj in id_objs:
         app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
