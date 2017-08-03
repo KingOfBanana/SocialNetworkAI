@@ -19,7 +19,7 @@ from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 # end
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
-@app.task(ignore_result=True)
+# @app.task(ignore_result=True)
 def crawl_weibo(uid):
 
     limit = get_max_home_page()
@@ -135,14 +135,14 @@ def crawl_weibo(uid):
     finish_uid_handler(uid, proxy)
     return
 
-@app.task
+# @app.task
 def excute_weibo_task():
-    id_objs = get_ids_by_home_flag_random(0, 100)
+    id_objs = get_ids_by_home_flag_random(0, 200)
     proxy_init()
     for id_obj in id_objs:
-        app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
-                      routing_key='weibo_info')
-        # crawl_weibo(id_obj.uid)
+        # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
+        #               routing_key='weibo_info')
+        crawl_weibo(id_obj.uid)
 
 def finish_uid_handler(uid, proxy):
     crawler.warning('用户id为{}的相册采集完成'.format(uid))
