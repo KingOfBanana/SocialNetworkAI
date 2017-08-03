@@ -27,20 +27,21 @@ def fetch_proxy(status = 1, num = 1):
 	if num <= 0:
 		return []
 	count = count_proxy()
+	result = []
 	if status == 1:
 		if count >= num:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(num).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(num).all()
 		elif count > 0:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(count).all()
-		else:
-			return []
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(count).all()
 	elif status == 0:
 		if count >= num:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(num).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(num).all()
 		elif count > 0:
-			return proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(count).all()
-		else:
-			return []
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(count).all()
+	if not result and result != []:
+		result = []
+	return result
+	
 
 @db_commit_decorator
 def get_proxy_by_dict(proxy_dict):
