@@ -22,7 +22,7 @@ def count_proxy():
 			return 0
 	except Exception as e:
 		return 0
-		
+
 # 正常情况下如果count>num，返回num条，否则返回count条，其他情况返回空数组
 # 在这里只寻找https代理
 @db_commit_decorator
@@ -33,14 +33,14 @@ def fetch_proxy(status = 1, num = 1):
 	result = []
 	if status == 1:
 		if count >= num:
-			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(num).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).limit(num).all()
 		elif count > 0:
-			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).order_by(Proxys.score, Proxys.speed).limit(count).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 0).limit(count).all()
 	elif status == 0:
 		if count >= num:
-			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(num).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).limit(num).all()
 		elif count > 0:
-			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).order_by(Proxys.score, Proxys.speed).limit(count).all()
+			result = proxy_db_session.query(Proxys).filter(Proxys.protocol != 1).limit(count).all()
 	if not result and result != []:
 		result = []
 	return result
