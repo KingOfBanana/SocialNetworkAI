@@ -14,12 +14,15 @@ def insert_proxy(proxies):
 
 @db_commit_decorator
 def count_proxy():
-	cnt = (proxy_db_session.query(func.count(Proxys.id)).first())[0]
-	if type(cnt) == int:
-		return cnt
-	else:
+	try:
+		cnt = (proxy_db_session.query(func.count(Proxys.id)).first())[0]
+		if type(cnt) == int:
+			return cnt
+		else:
+			return 0
+	except Exception as e:
 		return 0
-
+		
 # 正常情况下如果count>num，返回num条，否则返回count条，其他情况返回空数组
 # 在这里只寻找https代理
 @db_commit_decorator
