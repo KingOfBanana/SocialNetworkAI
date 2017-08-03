@@ -12,7 +12,7 @@ def parse_json_to_dict(html):
 
 @parse_decorator(3)
 def get_proxy_to_db():
-	url = 'http://www.xdaili.cn/ipagent/privateProxy/applyStaticProxy?count=1&spiderId=6b93c4863a7f4bc986b8046a169be574&returnType=2'
+	url = 'http://www.xdaili.cn/ipagent/greatRecharge/getGreatIp?spiderId=6b93c4863a7f4bc986b8046a169be574&orderno=YZ201783933405gg7L&returnType=2&count=20'
 	html = get_page(url, user_verify=False, need_login=False)
 	proxy_dict = parse_json_to_dict(html)
 	proxies = proxy_dict.get('RESULT')
