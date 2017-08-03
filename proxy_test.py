@@ -11,7 +11,7 @@ json_return = '{"ERRORCODE":"0","RESULT":[{"port":"43617","ip":"222.85.5.118"},{
 # test code
 if __name__ == '__main__':
 	url = 'http://127.0.0.1/phptest/xundaili.php'
-	get_proxy_to_db(url)
+	get_proxy_to_db()
 	print(get_a_random_proxy())
 
 # end

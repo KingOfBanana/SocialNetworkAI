@@ -64,6 +64,7 @@ def del_proxy_by_id(proxy_id):
 # 有相对模式和绝对模式
 @db_commit_decorator
 def set_proxy_score(proxy_dict, new_score, relative = True):
+	max_proxy_cnt = 20
 	proxy = get_proxy_by_dict(proxy_dict)
 	if proxy:
 		if relative:
@@ -74,6 +75,8 @@ def set_proxy_score(proxy_dict, new_score, relative = True):
 			del_proxy_by_id(proxy.id)
 			return True
 		proxy_db_session.commit()
+		return True
+	return False
 
 		
 
