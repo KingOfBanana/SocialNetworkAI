@@ -77,14 +77,14 @@ def parse_dict_to_wb_list(wb_dict):
 # [data] - 正常解析
 # 其他各种异常情况
 def get_weibo_list(html):
-    if check_banned(html):
-        return ''
     cont = parse_json_to_dict(html)
     check_bt_flag = check_no_bottom(cont)
     if check_bt_flag:
         return parse_dict_to_wb_list(cont)
     elif check_bt_flag == False:
         return False
+    elif check_banned(html):
+        return ''
     else:
         return None
 

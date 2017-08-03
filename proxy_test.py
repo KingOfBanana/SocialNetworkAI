@@ -3,24 +3,15 @@
 from db.basic_db import proxy_db_session
 from db.models import Proxys
 from db.redis_db import Proxys_Redis
-from db.db_proxy import count_proxy, fetch_proxy, get_proxy_by_dict, set_proxy_score, del_proxy_by_id, get_a_random_proxy
+from db.db_proxy import del_proxy_by_id, insert_proxy
+from page_parse.proxy import get_proxy_to_db, get_a_random_proxy
 
-# 获取一定数量的代理，如果这时候还未初始化，则先从sql中获取一定数量的代理放入redis中
-def get_proxy(num = 1):
-	result = []
-	proxys = fetch_proxy(num)
-	if proxys:
-		for proxy in proxys:
-			if proxy.protocol == 0 or proxy.protocol == 2:
-				addr = 'http:' + proxy.ip + ':' + str(proxy.port)
-				prot = 'http:'
-			elif proxy.protocol == 1:
-				addr = 'https:' + proxy.ip + ':' + str(proxy.port)
-				prot = 'https:'
-			result.append({prot: addr})
-	return result
+json_return = '{"ERRORCODE":"0","RESULT":[{"port":"43617","ip":"222.85.5.118"},{"port":"43569","ip":"180.122.20.108"},{"port":"20443","ip":"221.230.254.73"}]}'
 
 # test code
 if __name__ == '__main__':
+	url = 'http://127.0.0.1/phptest/xundaili.php'
+	get_proxy_to_db(url)
 	print(get_a_random_proxy())
+
 # end

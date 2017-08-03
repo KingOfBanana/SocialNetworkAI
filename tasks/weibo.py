@@ -10,7 +10,8 @@ from page_parse.weibo import get_weibo_list
 # new import for wb_pic
 from db.wb_pic import insert_weibo_pics
 from db.seed_ids import set_seed_home_crawled
-from db.db_proxy import set_proxy_score, get_a_random_proxy, fetch_proxy
+from db.db_proxy import set_proxy_score
+from page_parse.proxy import get_a_random_proxy
 
 # import for exception test
 # from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
