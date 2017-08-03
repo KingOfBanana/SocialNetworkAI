@@ -29,7 +29,7 @@ def get_proxy_to_db():
 			new_proxy.country = '国内'
 			new_proxy.area = '讯代理'
 			new_proxy.speed = 0.00
-			new_proxy.score = 5
+			new_proxy.score = 2
 			proxy_list.append(new_proxy)
 	if proxy_list:
 		insert_proxy(proxy_list)
