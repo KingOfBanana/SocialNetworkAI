@@ -6,10 +6,11 @@ from sqlalchemy import func
 
 @db_commit_decorator
 def insert_proxy(proxies):
-    for proxy in proxies:
-    	if proxy:
-        	proxy_db_session.add(proxy)
-    proxy_db_session.commit()
+	if proxies:
+	    for proxy in proxies:
+	    	if proxy:
+	        	proxy_db_session.add(proxy)
+	    proxy_db_session.commit()
 
 def count_proxy():
 	return (proxy_db_session.query(func.count(Proxys.id)).first())[0]
