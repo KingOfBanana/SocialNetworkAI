@@ -47,13 +47,13 @@ def crawl_weibo(uid):
 
 
     # test for getting empty proxy
-    if proxy == {}:
-        crawler.warning('empty proxy!')
-        time.sleep(3)
-        proxy = get_a_random_proxy()
-        proxy_cnt = count_proxy()
-        crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
-        return
+    # if proxy == {}:
+    #     crawler.warning('empty proxy!')
+    #     time.sleep(3)
+    #     proxy = get_a_random_proxy()
+    #     proxy_cnt = count_proxy()
+    #     crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
+    #     return
     # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
