@@ -149,7 +149,7 @@ def crawl_weibo(uid):
 
 # @app.task
 def excute_weibo_task():
-    id_objs = get_ids_by_home_flag_random(0, 200)
+    id_objs = get_ids_by_home_flag_random(0, 500)
     proxy_init()
     for id_obj in id_objs:
         # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
