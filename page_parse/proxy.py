@@ -51,7 +51,7 @@ def parse_a_proxy_to_dict(proxy, reg_flag=1):
 		return {}
 
 @parse_decorator(4)
-def get_a_random_proxy(num = 20):
+def get_a_random_proxy(num = 50):
 	http_proxys = fetch_proxy(0, num)
 	http_count = len(http_proxys)
 	if http_count == 0:
