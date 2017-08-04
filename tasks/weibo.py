@@ -10,7 +10,8 @@ from page_parse.weibo import get_weibo_list
 # new import for wb_pic
 from db.wb_pic import insert_weibo_pics
 from db.seed_ids import set_seed_home_crawled
-# from db.db_proxy import set_proxy_score
+
+from db.db_proxy import count_proxy
 from page_parse.proxy import get_a_random_proxy
 from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 
@@ -42,6 +43,16 @@ def crawl_weibo(uid):
     # print for proxy
     proxy = get_a_random_proxy()
     print(proxy)
+    # end
+
+
+    # test for getting empty proxy
+    if proxy == {}:
+        crawler.warning('empty proxy!')
+        proxy = get_a_random_proxy()
+        proxy_cnt = count_proxy()
+        crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
+        return
     # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
