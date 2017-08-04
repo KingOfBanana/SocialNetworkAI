@@ -14,14 +14,14 @@ if __name__ == '__main__':
 	# url = 'http://127.0.0.1/phptest/xundaili.php'
 	# get_proxy_to_db()
 	# print(get_a_random_proxy())
-	i = 0
-	while i < 300:
-		proxy = get_a_random_proxy()
-		count = count_proxy()
-		print('proxy:', proxy)
-		print('count:', count)
-		sleep(1)
-		i = i + 1
-	
+	# i = 0
+	# while i < 300:
+	# 	proxy = get_a_random_proxy()
+	# 	count = count_proxy()
+	# 	print('proxy:', proxy)
+	# 	print('count:', count)
+	# 	sleep(1)
+	# 	i = i + 1
+	get_proxy_to_db()
 
 # end
