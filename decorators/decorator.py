@@ -5,6 +5,8 @@ from db.basic_db import db_session
 from logger.log import parser, crawler, storage
 from utils.util_cls import Timeout, KThread
 
+from db.basic_db import proxy_db_session
+
 
 # timeout decorator
 def timeout_decorator(func):
@@ -30,6 +32,17 @@ def db_commit_decorator(func):
             storage.error('db operation error，here are details{}'.format(e))
             storage.warning('transaction rollbacks')
             db_session.rollback()
+    return session_commit
+
+def proxy_db_commit_decorator(func):
+    @wraps(func)
+    def session_commit(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            storage.error('db operation error，here are details{}'.format(e))
+            storage.warning('transaction rollbacks')
+            proxy_db_session.rollback()
     return session_commit
 
 
