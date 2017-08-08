@@ -12,7 +12,7 @@ def parse_json_to_dict(html):
 
 @parse_decorator(3)
 def get_proxy_to_db():
-	url = 'http://www.xdaili.cn/ipagent/greatRecharge/getGreatIp?spiderId=6b93c4863a7f4bc986b8046a169be574&orderno=YZ201783933405gg7L&returnType=2&count=20'
+	url = 'http://www.xdaili.cn/ipagent/greatRecharge/getGreatIp?spiderId=e9476c1f68c14f6188b1a253e134d764&orderno=MF2017889655hMivoZ&returnType=2&count=10'
 	html = get_page(url, user_verify=False, need_login=False)
 	proxy_dict = parse_json_to_dict(html)
 	proxies = proxy_dict.get('RESULT')
@@ -39,7 +39,7 @@ def get_proxy_to_db():
 
 @parse_decorator(3)
 def get_mpproxy_to_db():
-	url = 'http://proxy.mimvp.com/api/fetch.php?orderid=860170808163932696&num=100&country_group=1&http_type=2&anonymous=3,5&result_fields=1,2&result_format=json'
+	url = 'http://proxy.mimvp.com/api/fetch.php?orderid=860170808163932696&num=100&country_group=1&http_type=2&anonymous=3,5&result_fields=1,2&result_format=json&ping_time=1'
 	html = get_page(url, user_verify=False, need_login=False)
 	proxy_dict = parse_json_to_dict(html)
 	proxies = proxy_dict.get('result')
@@ -107,8 +107,8 @@ def proxy_handler(proxy_dict, new_score, relative=True):
 def proxy_init():
 	max_proxy_cnt = int(5)
 	if count_proxy() <= max_proxy_cnt:
-		# return get_proxy_to_db()
-		return get_mpproxy_to_db()
+		return get_proxy_to_db()
+		# return get_mpproxy_to_db()
 	else:
 		return True
 
