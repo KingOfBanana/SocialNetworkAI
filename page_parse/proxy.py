@@ -29,7 +29,39 @@ def get_proxy_to_db():
 			new_proxy.country = '国内'
 			new_proxy.area = '讯代理'
 			new_proxy.speed = 0.00
-			new_proxy.score = 2
+			new_proxy.score = 5
+			proxy_list.append(new_proxy)
+	if proxy_list:
+		insert_proxy(proxy_list)
+		return True
+	else:
+		return False
+
+@parse_decorator(3)
+def get_mpproxy_to_db():
+	url = 'http://proxy.mimvp.com/api/fetch.php?orderid=860170808163932696&num=100&country_group=1&http_type=2&anonymous=3,5&result_fields=1,2&result_format=json'
+	html = get_page(url, user_verify=False, need_login=False)
+	proxy_dict = parse_json_to_dict(html)
+	proxies = proxy_dict.get('result')
+	proxy_list = []
+	if proxies:
+		for proxy in proxies:
+			data = proxy.get('ip:port')
+			data = data.split(':')
+			if data:
+				ip = data[0]
+				port = data[1]
+			else:
+				return False
+			new_proxy = Proxys()
+			new_proxy.ip = ip
+			new_proxy.port = port
+			new_proxy.types = 2
+			new_proxy.protocol = 2
+			new_proxy.country = '国内'
+			new_proxy.area = '米扑代理'
+			new_proxy.speed = 0.00
+			new_proxy.score = 5
 			proxy_list.append(new_proxy)
 	if proxy_list:
 		insert_proxy(proxy_list)
@@ -73,9 +105,10 @@ def proxy_handler(proxy_dict, new_score, relative=True):
 		return proxy_init()
 
 def proxy_init():
-	max_proxy_cnt = int(20 / 4)
+	max_proxy_cnt = int(5)
 	if count_proxy() <= max_proxy_cnt:
-		return get_proxy_to_db()
+		# return get_proxy_to_db()
+		return get_mpproxy_to_db()
 	else:
 		return True
 

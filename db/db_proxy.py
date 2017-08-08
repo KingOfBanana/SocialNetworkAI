@@ -80,6 +80,9 @@ def set_proxy_score(proxy_dict, new_score, relative = True):
 	proxy = get_proxy_by_dict(proxy_dict)
 	if proxy:
 		if relative:
+			if new_score < 0 and proxy.last_delta < 0:
+				new_score = proxy.last_delta * 2
+			proxy.last_delta = new_score
 			proxy.score = proxy.score + new_score
 		else:
 			proxy.score = new_score

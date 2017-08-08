@@ -131,7 +131,8 @@ proxys = Table("proxys", proxy_db_metadata,
                   Column('area', VARCHAR(100), nullable=False),
                   Column('updatetime', DateTime()),
                   Column('speed', Numeric(5, 2), nullable=False),
-                  Column('score', INTEGER, nullable=False)
+                  Column('score', INTEGER, nullable=False),
+                  Column('last_delta', INTEGER, nullable=False, default=0, server_default='0'),
                   )
 
 
