@@ -10,5 +10,5 @@ from time import sleep
 # test code
 if __name__ == '__main__':
 	# get_proxy_to_db()
-	print(get_followers(3600364847))
+	get_proxy_to_db()
 # end

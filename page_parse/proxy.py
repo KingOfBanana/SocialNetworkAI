@@ -18,8 +18,9 @@ def get_proxy_to_db():
 			html = get_page(source.url, user_verify=False, need_login=False)
 			proxy_dict = parse_json_to_dict(html)
 			proxies = proxy_dict.get('RESULT')
+			err_code = int(proxy_dict.get('ERRORCODE'))
 			proxy_list = []
-			if proxies:
+			if proxies and err_code == 0:
 				for proxy in proxies:
 					port = proxy.get('port')
 					ip = proxy.get('ip')
