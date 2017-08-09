@@ -2,7 +2,7 @@ import json
 from decorators.decorator import parse_decorator
 from page_get.basic import get_page
 from db.models import Proxys
-from db.db_proxy import del_proxy_by_id, insert_proxy, fetch_proxy, set_proxy_score, count_proxy
+from db.db_proxy import del_proxy_by_id, insert_proxy, fetch_proxy, set_proxy_score, count_proxy, get_proxy_source_by_source
 from random import randint
 
 @parse_decorator(3)
@@ -12,30 +12,33 @@ def parse_json_to_dict(html):
 
 @parse_decorator(3)
 def get_proxy_to_db():
-	url = 'http://www.xdaili.cn/ipagent/greatRecharge/getGreatIp?spiderId=e9476c1f68c14f6188b1a253e134d764&orderno=YZ2017886202Li78BU&returnType=2&count=20'
-	html = get_page(url, user_verify=False, need_login=False)
-	proxy_dict = parse_json_to_dict(html)
-	proxies = proxy_dict.get('RESULT')
-	proxy_list = []
-	if proxies:
-		for proxy in proxies:
-			port = proxy.get('port')
-			ip = proxy.get('ip')
-			new_proxy = Proxys()
-			new_proxy.ip = ip
-			new_proxy.port = port
-			new_proxy.types = 2
-			new_proxy.protocol = 2
-			new_proxy.country = '国内'
-			new_proxy.area = '讯代理'
-			new_proxy.speed = 0.00
-			new_proxy.score = 5
-			proxy_list.append(new_proxy)
-	if proxy_list:
-		insert_proxy(proxy_list)
-		return True
-	else:
-		return False
+	proxy_sources = get_proxy_source_by_source()
+	if proxy_sources:
+		for source in proxy_sources:
+			html = get_page(source.url, user_verify=False, need_login=False)
+			proxy_dict = parse_json_to_dict(html)
+			proxies = proxy_dict.get('RESULT')
+			proxy_list = []
+			if proxies:
+				for proxy in proxies:
+					port = proxy.get('port')
+					ip = proxy.get('ip')
+					new_proxy = Proxys()
+					new_proxy.ip = ip
+					new_proxy.port = port
+					new_proxy.types = 2
+					new_proxy.protocol = 2
+					new_proxy.country = '国内'
+					new_proxy.area = '讯代理'
+					new_proxy.speed = 0.00
+					new_proxy.score = 5
+					proxy_list.append(new_proxy)
+			if proxy_list:
+				insert_proxy(proxy_list)
+				return True
+			# else:
+			# 	return False
+	return False
 
 @parse_decorator(3)
 def get_mpproxy_to_db():
@@ -105,7 +108,7 @@ def proxy_handler(proxy_dict, new_score, relative=True):
 		return proxy_init()
 
 def proxy_init():
-	max_proxy_cnt = int(10)
+	max_proxy_cnt = int(13)
 	if count_proxy() <= max_proxy_cnt:
 		return get_proxy_to_db()
 		# return get_mpproxy_to_db()

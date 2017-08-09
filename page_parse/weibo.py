@@ -90,11 +90,12 @@ def get_weibo_list(html):
 
 @parse_decorator(2)
 def mblog_to_db_handler(mblog_dict):
-    pics = mblog_dict['pics']
     mid = mblog_dict['mid']
     uid = mblog_dict['user']['id']
     wb_pic_list = list()
-    if pics:
+    # if pics:
+    if 'pics' in mblog_dict:
+        pics = mblog_dict['pics']
         for pic in pics:
             wb_pic = WeiboPic()
             wb_pic.uid = uid

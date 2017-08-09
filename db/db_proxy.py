@@ -1,6 +1,6 @@
 # coding:utf-8
 from db.basic_db import proxy_db_session
-from db.models import Proxys
+from db.models import Proxys, ProxySource
 from decorators.decorator import db_commit_decorator, proxy_db_commit_decorator
 from sqlalchemy import func
 
@@ -75,7 +75,7 @@ def del_proxy_by_id(proxy_id):
 
 # 有相对模式和绝对模式
 @proxy_db_commit_decorator
-def set_proxy_score(proxy_dict, new_score, relative = True):
+def set_proxy_score(proxy_dict, new_score, relative=True):
 	max_proxy_cnt = 20
 	proxy = get_proxy_by_dict(proxy_dict)
 	if proxy:
@@ -93,5 +93,7 @@ def set_proxy_score(proxy_dict, new_score, relative = True):
 		return True
 	return False
 
-		
-
+# 通过指定source的值来获取对应的URL
+def get_proxy_source_by_source(source=0):
+	proxy_sources = proxy_db_session.query(ProxySource).filter(ProxySource.source == source).filter(ProxySource.status == 1).all()
+	return proxy_sources

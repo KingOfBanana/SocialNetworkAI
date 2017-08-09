@@ -52,10 +52,13 @@ class UserRelation(Base):
         self.follow_or_fans_id = other_id
         self.type = type
 
-
 class WeiboPic(Base):
     __table__ = weibo_pic
 
 class Proxys(Base):
     __table__ = proxys
+    __bind_key__ = 'proxy_db_eng'
+
+class ProxySource(Base):
+    __table__ = proxy_source
     __bind_key__ = 'proxy_db_eng'

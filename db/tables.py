@@ -135,6 +135,13 @@ proxys = Table("proxys", proxy_db_metadata,
                   Column('last_delta', INTEGER, nullable=False, default=0, server_default='0'),
                   )
 
+# proxy source table
+proxy_source = Table("proxy_source", proxy_db_metadata,
+                  Column('id', INTEGER, primary_key=True, autoincrement=True),
+                  Column('url', VARCHAR(200), nullable=False),
+                  Column('source', INTEGER, nullable=False, default=0, server_default='0'),
+                  Column('status', INTEGER, nullable=False, default=1, server_default='1'),
+                  )
 
 __all__ = ['login_info', 'wbuser', 'seed_ids', 'keywords', 'weibo_data', 'keywords_wbdata', 'weibo_comment',
-           'weibo_repost', 'user_relation', 'weibo_pic', 'proxys']
+           'weibo_repost', 'user_relation', 'weibo_pic', 'proxys', 'proxy_source']

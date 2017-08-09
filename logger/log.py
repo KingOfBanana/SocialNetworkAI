@@ -31,7 +31,7 @@ log_config = {
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 10,
             'filename': log_path,
-            'level': 'INFO',
+            'level': 'ERROR',
             'formatter': 'detail',
             'encoding': 'utf-8',
         },
