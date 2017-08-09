@@ -108,7 +108,7 @@ def proxy_handler(proxy_dict, new_score, relative=True):
 		return proxy_init()
 
 def proxy_init():
-	max_proxy_cnt = int(13)
+	max_proxy_cnt = int(8)
 	if count_proxy() <= max_proxy_cnt:
 		return get_proxy_to_db()
 		# return get_mpproxy_to_db()
