@@ -89,7 +89,7 @@ def crawl_weibo(uid):
             time.sleep(randint(0, 60))
         else:
             proxy_handler(proxy, -1)
-            return
+        return
 
     if weibo_pics == None:
         exception_uid_handler(uid, 2, proxy, html)
@@ -138,7 +138,7 @@ def crawl_weibo(uid):
                 time.sleep(randint(0, 60))
             else:
                 proxy_handler(proxy, -1)
-                return
+            return
 
         if weibo_pics == None:
             exception_uid_handler(uid, 4, proxy, html)
@@ -158,7 +158,7 @@ def crawl_weibo(uid):
 
 # @app.task
 def excute_weibo_task():
-    id_objs = get_ids_by_home_flag_random(0, 200)
+    id_objs = get_ids_by_home_flag_random(0, 100)
     proxy_init()
     for id_obj in id_objs:
         # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
