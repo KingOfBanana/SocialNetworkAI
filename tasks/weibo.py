@@ -15,6 +15,8 @@ from db.db_proxy import count_proxy
 from page_parse.proxy import get_a_random_proxy
 from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 
+from random import randint
+
 # import for exception test
 # from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
 # end
@@ -46,13 +48,14 @@ def crawl_weibo(uid):
     # end
 
     # test for getting empty proxy
-    # if proxy == {}:
-    #     crawler.warning('empty proxy!')
-    #     time.sleep(3)
-    #     proxy = get_a_random_proxy()
-    #     proxy_cnt = count_proxy()
-    #     crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
-    #     return
+    if proxy == {}:
+        # crawler.warning('empty proxy!')
+        # time.sleep(3)
+        # proxy = get_a_random_proxy()
+        # proxy_cnt = count_proxy()
+        # crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
+        # return
+        time.sleep(randint(0, 60))
     # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
@@ -65,6 +68,10 @@ def crawl_weibo(uid):
             cur_retry_cnt = cur_retry_cnt + 1
             proxy_handler(proxy, -1)
             proxy = get_a_random_proxy()
+
+            if proxy == {}:
+                time.sleep(randint(0, 60))
+
             html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
             if html == '':
                 exception_uid_handler(uid, 5, proxy)
@@ -106,6 +113,10 @@ def crawl_weibo(uid):
                 cur_retry_cnt = cur_retry_cnt + 1
                 proxy_handler(proxy, -1)
                 proxy = get_a_random_proxy()
+
+                if proxy == {}:
+                    time.sleep(randint(0, 60))
+                
                 html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
                 if html == '':
                     exception_uid_handler(uid, 6, proxy)
