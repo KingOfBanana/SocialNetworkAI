@@ -94,6 +94,6 @@ def set_proxy_score(proxy_dict, new_score, relative=True):
 	return False
 
 # 通过指定source的值来获取对应的URL
-def get_proxy_source_by_source(source=0):
-	proxy_sources = proxy_db_session.query(ProxySource).filter(ProxySource.source == source).filter(ProxySource.status == 1).all()
+def get_proxy_source_by_source():
+	proxy_sources = proxy_db_session.query(ProxySource).filter(ProxySource.status == 1).all()
 	return proxy_sources

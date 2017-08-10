@@ -10,35 +10,69 @@ def parse_json_to_dict(html):
     cont = json.loads(html, encoding='utf-8')
     return cont
 
+@parse_decorator(2)
+def parse_xdaili_return(url):
+	html = get_page(url, user_verify=False, need_login=False)
+	proxy_dict = parse_json_to_dict(html)
+	proxies = proxy_dict.get('RESULT')
+	err_code = int(proxy_dict.get('ERRORCODE'))
+	proxy_list = []
+	if proxies and err_code == 0:
+		for proxy in proxies:
+			port = proxy.get('port')
+			ip = proxy.get('ip')
+			new_proxy = Proxys()
+			new_proxy.ip = ip
+			new_proxy.port = port
+			new_proxy.types = 2
+			new_proxy.protocol = 2
+			new_proxy.country = '国内'
+			new_proxy.area = '讯代理'
+			new_proxy.speed = 0.00
+			new_proxy.score = 5
+			proxy_list.append(new_proxy)
+	return proxy_list
+
+@parse_decorator(2)
+def parse_kuaidaili_return(url):
+	html = get_page(url, user_verify=False, need_login=False)
+	proxy_list = []
+	if html:
+		proxies = html.split('\r\n')
+		if proxies:
+			for proxy in proxies:
+				data = proxy.split(':')
+				if data:
+					ip = data[0]
+					port = data[1]
+				else:
+					return []
+				new_proxy = Proxys()
+				new_proxy.ip = ip
+				new_proxy.port = port
+				new_proxy.types = 2
+				new_proxy.protocol = 2
+				new_proxy.country = '国内'
+				new_proxy.area = '快代理'
+				new_proxy.speed = 0.00
+				new_proxy.score = 5
+				proxy_list.append(new_proxy)
+	return proxy_list
+
+# 根据不同的代理商家去选择相应的处理规则
 @parse_decorator(3)
 def get_proxy_to_db():
 	proxy_sources = get_proxy_source_by_source()
 	if proxy_sources:
+		proxy_list = []
 		for source in proxy_sources:
-			html = get_page(source.url, user_verify=False, need_login=False)
-			proxy_dict = parse_json_to_dict(html)
-			proxies = proxy_dict.get('RESULT')
-			err_code = int(proxy_dict.get('ERRORCODE'))
-			proxy_list = []
-			if proxies and err_code == 0:
-				for proxy in proxies:
-					port = proxy.get('port')
-					ip = proxy.get('ip')
-					new_proxy = Proxys()
-					new_proxy.ip = ip
-					new_proxy.port = port
-					new_proxy.types = 2
-					new_proxy.protocol = 2
-					new_proxy.country = '国内'
-					new_proxy.area = '讯代理'
-					new_proxy.speed = 0.00
-					new_proxy.score = 5
-					proxy_list.append(new_proxy)
+			if source.source == 0:
+				proxy_list.extend(parse_xdaili_return(source.url))
+			elif source.source == 1:
+				proxy_list.extend(parse_kuaidaili_return(source.url))
 			if proxy_list:
 				insert_proxy(proxy_list)
 				return True
-			# else:
-			# 	return False
 	return False
 
 @parse_decorator(3)
@@ -102,7 +136,6 @@ def get_a_random_proxy(num = 50):
 	https_index = randint(0, https_count-1)
 	https_dict = parse_a_proxy_to_dict(https_proxys[https_index], 1)
 	return dict(http_dict, **https_dict)
-	# return {}
 
 def proxy_handler(proxy_dict, new_score, relative=True):
 	if set_proxy_score(proxy_dict, new_score, relative) == True:
@@ -112,7 +145,6 @@ def proxy_init():
 	max_proxy_cnt = int(8)
 	if count_proxy() <= max_proxy_cnt:
 		return get_proxy_to_db()
-		# return get_mpproxy_to_db()
 	else:
 		return True
 

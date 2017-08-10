@@ -74,10 +74,10 @@ def crawl_weibo(uid):
 
             html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
             if html == '':
-                exception_uid_handler(uid, 5, proxy)
+                proxy_handler(proxy, -1)
                 return
         else:
-            exception_uid_handler(uid, 1, proxy)
+            proxy_handler(proxy, -1)
             return
     # end
 
@@ -92,7 +92,7 @@ def crawl_weibo(uid):
         return
 
     if weibo_pics == None:
-        exception_uid_handler(uid, 2, proxy, html)
+        proxy_handler(proxy, -1)
         return
     elif weibo_pics == False:
         finish_uid_handler(uid, proxy)
