@@ -20,7 +20,7 @@ from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 # end
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
-# @app.task(ignore_result=True)
+@app.task(ignore_result=True)
 def crawl_weibo(uid):
 
     limit = get_max_home_page()
@@ -45,26 +45,18 @@ def crawl_weibo(uid):
     print(proxy)
     # end
 
-
     # test for getting empty proxy
-    if proxy == {}:
-        crawler.warning('empty proxy!')
-        time.sleep(3)
-        proxy = get_a_random_proxy()
-        proxy_cnt = count_proxy()
-        crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
-        return
+    # if proxy == {}:
+    #     crawler.warning('empty proxy!')
+    #     time.sleep(3)
+    #     proxy = get_a_random_proxy()
+    #     proxy_cnt = count_proxy()
+    #     crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
+    #     return
     # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
     html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
-
-    # proxy_test
-    # proxy = {}
-    # url = 'https://www.icanhazip.com'
-    # html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
-    # print(html)
-    # end
 
     # html为空也有可能是其他原因，但是代理问题应该是大概率，因此对代理进行扣分。
     # 如果重试还是返回空html，那么两个proxy均不扣分，记录uid异常后直接return，如果返回非空但无效的html，则在后面流程进行扣分
@@ -147,14 +139,14 @@ def crawl_weibo(uid):
     finish_uid_handler(uid, proxy)
     return
 
-# @app.task
+@app.task
 def excute_weibo_task():
-    id_objs = get_ids_by_home_flag_random(0, 2000)
+    id_objs = get_ids_by_home_flag_random(0, 200)
     proxy_init()
     for id_obj in id_objs:
-        # app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
-        #               routing_key='weibo_info')
-        crawl_weibo(id_obj.uid)
+        app.send_task('tasks.weibo.crawl_weibo', args=(id_obj.uid,), queue='weibo_crawler',
+                      routing_key='weibo_info')
+        # crawl_weibo(id_obj.uid)
 
 def finish_uid_handler(uid, proxy):
     crawler.warning('用户id为{}的相册采集完成'.format(uid))

@@ -25,6 +25,9 @@ app.conf.update(
     CELERY_ACCEPT_CONTENT=['json'],
     CELERY_TASK_SERIALIZER='json',
     CELERY_RESULT_SERIALIZER='json',
+    # new config
+    CELERYD_MAX_TASKS_PER_CHILD = 40,
+    # end
     CELERYBEAT_SCHEDULE={
         'login_task': {
             'task': 'tasks.login.excute_login_task',
