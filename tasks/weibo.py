@@ -85,8 +85,11 @@ def crawl_weibo(uid):
 
     if weibo_pics == '':
         crawler.warning('请求过于频繁')
-        proxy_handler(proxy, -1)
-        return
+        if proxy == {}:
+            time.sleep(randint(0, 60))
+        else:
+            proxy_handler(proxy, -1)
+            return
 
     if weibo_pics == None:
         exception_uid_handler(uid, 2, proxy, html)
@@ -131,8 +134,11 @@ def crawl_weibo(uid):
         # 如果通过当前代理所获取到的页面是被封锁页面，则将当前代理降分并直接return
         if weibo_pics == '':
             crawler.warning('请求过于频繁')
-            proxy_handler(proxy, -1)
-            return
+            if proxy == {}:
+                time.sleep(randint(0, 60))
+            else:
+                proxy_handler(proxy, -1)
+                return
 
         if weibo_pics == None:
             exception_uid_handler(uid, 4, proxy, html)
