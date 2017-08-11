@@ -16,10 +16,8 @@ from page_parse.proxy import get_a_random_proxy
 from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 
 from random import randint
+from utils.random_gen import random_event_occur
 
-# import for exception test
-# from page_parse.weibo import check_no_bottom, check_no_bottom, parse_json_to_dict
-# end
 ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
 # @app.task(ignore_result=True)
@@ -34,6 +32,8 @@ def crawl_weibo(uid):
     max_retry_cnt = 2
     cur_retry_cnt = 0
 
+    direct_get_sleep_time = 30
+
     containerid = '230413' + uid
     luicode = '10000011'
     lfid = '230283' + uid
@@ -42,8 +42,12 @@ def crawl_weibo(uid):
     page_type = '03'
     page = cur_page
 
-    # print for proxy
+    # 只要db中没有proxy，就认为当前进入了一个暂时无代理而需要直接连接的状况，sleep的时间就应该相应的拉长
     proxy = get_a_random_proxy()
+    if proxy == {}:
+        direct_get_sleep_time = 60
+    elif random_event_occur():
+        proxy = {}
     print(proxy)
     # end
 
@@ -55,7 +59,7 @@ def crawl_weibo(uid):
         # proxy_cnt = count_proxy()
         # crawler.warning('new proxy:{}, proxy count:{}'.format(proxy, proxy_cnt))
         # return
-        time.sleep(randint(0, 60))
+        time.sleep(randint(0, direct_get_sleep_time))
     # end
 
     url = ori_wb_temp_url.format(containerid, luicode, lfid, featurecode, value, page_type, page)
@@ -70,7 +74,7 @@ def crawl_weibo(uid):
             proxy = get_a_random_proxy()
 
             if proxy == {}:
-                time.sleep(randint(0, 60))
+                time.sleep(randint(0, direct_get_sleep_time))
 
             html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
             if html == '':
@@ -86,7 +90,7 @@ def crawl_weibo(uid):
     if weibo_pics == '':
         crawler.warning('请求过于频繁')
         if proxy == {}:
-            time.sleep(randint(0, 60))
+            time.sleep(randint(0, direct_get_sleep_time))
         else:
             proxy_handler(proxy, -1)
         return
@@ -118,7 +122,7 @@ def crawl_weibo(uid):
                 proxy = get_a_random_proxy()
 
                 if proxy == {}:
-                    time.sleep(randint(0, 60))
+                    time.sleep(randint(0, direct_get_sleep_time))
                 
                 html = get_page(url, user_verify=False, need_login=False, proxys=proxy)
                 if html == '':
@@ -135,7 +139,7 @@ def crawl_weibo(uid):
         if weibo_pics == '':
             crawler.warning('请求过于频繁')
             if proxy == {}:
-                time.sleep(randint(0, 60))
+                time.sleep(randint(0, direct_get_sleep_time))
             else:
                 proxy_handler(proxy, -1)
             return
