@@ -91,6 +91,7 @@ def crawl_weibo(uid):
         crawler.warning('请求过于频繁')
         if proxy == {}:
             time.sleep(randint(0, direct_get_sleep_time))
+            proxy_handler(proxy, -1)
         else:
             proxy_handler(proxy, -1)
         return
@@ -140,6 +141,7 @@ def crawl_weibo(uid):
             crawler.warning('请求过于频繁')
             if proxy == {}:
                 time.sleep(randint(0, direct_get_sleep_time))
+                proxy_handler(proxy, -1)
             else:
                 proxy_handler(proxy, -1)
             return

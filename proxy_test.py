@@ -9,6 +9,6 @@ from utils.random_gen import random_event_occur
 
 # test code
 if __name__ == '__main__':
-	print(random_event_occur())
+	get_proxy_to_db()
 	# get_proxy_to_db()
 # end
