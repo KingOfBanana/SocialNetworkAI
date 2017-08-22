@@ -18,7 +18,7 @@ from page_parse.proxy import proxy_handler, get_proxy_to_db, proxy_init
 from random import randint
 from utils.random_gen import random_event_occur
 
-ori_wb_temp_url = 'http://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
+ori_wb_temp_url = 'https://m.weibo.cn/api/container/getIndex?containerid={}_-_WEIBO_SECOND_PROFILE_WEIBO_ORI&luicode={}&lfid={}&featurecode={}&type=uid&value={}&page_type={}&page={}'
 
 # @app.task(ignore_result=True)
 def crawl_weibo(uid):

@@ -124,18 +124,26 @@ def parse_a_proxy_to_dict(proxy, reg_flag=1):
 def get_a_random_proxy(num = 50):
 	http_proxys = fetch_proxy(0, num)
 	http_count = len(http_proxys)
-	if http_count == 0:
-		return {}
-	http_index = randint(0, http_count-1)
-	http_dict = parse_a_proxy_to_dict(http_proxys[http_index], 0)
+	# if http_count == 0:
+	# 	return {}
+	if http_count != 0:
+		http_index = randint(0, http_count-1)
+		http_dict = parse_a_proxy_to_dict(http_proxys[http_index], 0)
 
 	https_proxys = fetch_proxy(1, num)
 	https_count = len(https_proxys)
-	if https_count == 0:
+	# if https_count == 0:
+	# 	return {}
+	if https_count != 0:
+		https_index = randint(0, https_count-1)
+		https_dict = parse_a_proxy_to_dict(https_proxys[https_index], 1)
+
+	if https_count != 0 and http_count != 0:
+		return dict(http_dict, **https_dict)
+	elif https_count != 0:
+		return dict(https_dict)
+	else:
 		return {}
-	https_index = randint(0, https_count-1)
-	https_dict = parse_a_proxy_to_dict(https_proxys[https_index], 1)
-	return dict(http_dict, **https_dict)
 
 def proxy_handler(proxy_dict, new_score, relative=True):
 	if set_proxy_score(proxy_dict, new_score, relative) == True:
