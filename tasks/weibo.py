@@ -174,7 +174,7 @@ def finish_uid_handler(uid, proxy):
 
 def exception_uid_handler(uid, err_code, proxy ={}, html=''):
     crawler.warning('用户id为{}的相册采集出错，这一请求接收到的内容为{}，状态码{}'.format(uid, html, err_code))
-    set_seed_home_crawled(uid, 3)
+    # set_seed_home_crawled(uid, 3)
     if proxy:
         proxy_handler(proxy, -1)
 
