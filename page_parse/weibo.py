@@ -64,7 +64,7 @@ def parse_json_to_dict(html):
 @parse_decorator(5)
 def parse_dict_to_wb_list(wb_dict):
     weibo_pic_list = []
-    cards = wb_dict['cards']
+    cards = wb_dict['data']['cards']
     if cards:
         for card in cards:
             if card['mblog']:
@@ -116,14 +116,15 @@ def mblog_to_db_handler(mblog_dict):
 # 返回False有可能是两种情况，一是确实到底部，二是解析错误，返回false。
 @parse_decorator(5)
 def check_no_bottom(wb_dict):
-    if 'cards' in wb_dict:
-        if len(wb_dict['cards']) == 1:
-            if 'mblog' in wb_dict['cards'][0]:
+    new_card = wb_dict['data']
+    if 'cards' in new_card:
+        if len(new_card['cards']) == 1:
+            if 'mblog' in new_card['cards'][0]:
                 return True
-            elif 'name' in wb_dict['cards'][0]:
-                if wb_dict['cards'][0]['name'] == '暂无微博':
+            elif 'name' in new_card['cards'][0]:
+                if new_card['cards'][0]['name'] == '暂无微博':
                     return False
-        elif len(wb_dict['cards']) > 1:
+        elif len(new_card['cards']) > 1:
             return True
         else:
             return None

@@ -22,6 +22,7 @@ ori_wb_temp_url = 'https://m.weibo.cn/api/container/getIndex?containerid={}_-_WE
 
 # @app.task(ignore_result=True)
 def crawl_weibo(uid):
+    debug_mode = 1
 
     limit = get_max_home_page()
     cur_page = 1
@@ -51,6 +52,8 @@ def crawl_weibo(uid):
     print(proxy)
     # end
 
+    if debug_mode == 1:
+        direct_get_sleep_time = 1
     # test for getting empty proxy
     if proxy == {}:
         # crawler.warning('empty proxy!')
